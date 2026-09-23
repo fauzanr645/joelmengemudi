@@ -12,6 +12,7 @@ import {
   Building2,
 } from "lucide-react"
 import { useState } from "react"
+import { signOut } from "next-auth/react"
 import { NotificationCenter } from "@/components/notification-center"
 
 interface SidebarItem {
@@ -32,6 +33,36 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleSignOut = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+
+    try {
+      // Panggil signOut bawaan NextAuth.js yang otomatis menangani CSRF token & session broadcast
+      await signOut({ callbackUrl: "/login", redirect: false })
+    } catch (err) {
+      console.warn("NextAuth signOut warning:", err)
+      // Fallback manual request jika diperlukan
+      try {
+        const csrfRes = await fetch("/api/auth/csrf")
+        const csrfData = await csrfRes.json()
+        const csrfToken = csrfData?.csrfToken || ""
+        await fetch("/api/auth/signout", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ csrfToken, callbackUrl: "/login" }),
+        })
+      } catch (fallbackErr) {
+        console.warn("Fallback signout error:", fallbackErr)
+      }
+    } finally {
+      // Full hard reload ke /login untuk mereset seluruh cache, chunks lama, dan session cookies
+      window.location.href = "/login"
+    }
+  }
 
   const toggleExpand = (label: string) => {
     setExpandedItems((prev) =>
@@ -264,13 +295,14 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
 
         {/* Footer with Logout */}
         <div className="p-3 border-t border-slate-100 bg-slate-50/40">
-          <form action="/api/auth/signout" method="POST">
+          <form onSubmit={handleSignOut}>
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors border border-transparent hover:border-rose-200 cursor-pointer"
+              disabled={isLoggingOut}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors border border-transparent hover:border-rose-200 cursor-pointer disabled:opacity-50"
             >
               <LogOut size={16} />
-              <span>Keluar dari Akun</span>
+              <span>{isLoggingOut ? "Sedang keluar..." : "Keluar dari Akun"}</span>
             </button>
           </form>
         </div>

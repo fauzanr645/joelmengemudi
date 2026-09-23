@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma"
 import { checkRateLimit } from "@/lib/rate-limit"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",

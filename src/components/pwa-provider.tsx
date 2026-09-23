@@ -67,6 +67,32 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("appinstalled", handleAppInstalled)
 
+    // 6. Handle ChunkLoadError when a new version is deployed to Vercel
+    const handleChunkError = (e: ErrorEvent | PromiseRejectionEvent) => {
+      const message =
+        ("message" in e ? e.message : "") ||
+        ("reason" in e ? (e.reason?.message || String(e.reason)) : "")
+      if (
+        message &&
+        (message.includes("ChunkLoadError") ||
+          message.includes("Loading chunk") ||
+          message.includes("Failed to fetch dynamically imported module") ||
+          message.includes("failed to load script"))
+      ) {
+        console.warn("Detected chunk load error after deployment, refreshing to load latest version...", message)
+        const lastReload = sessionStorage.getItem("chunk-error-reload")
+        const now = Date.now()
+        // Prevent infinite reload loops: reload at most once every 10 seconds
+        if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+          sessionStorage.setItem("chunk-error-reload", now.toString())
+          window.location.reload()
+        }
+      }
+    }
+
+    window.addEventListener("error", handleChunkError)
+    window.addEventListener("unhandledrejection", handleChunkError)
+
     // Show prompt on iOS if not dismissed and not standalone
     if (isIosDevice && !isStandaloneMode && !dismissed) {
       const timer = setTimeout(() => setShowPrompt(true), 3000)
@@ -76,6 +102,8 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
       window.removeEventListener("appinstalled", handleAppInstalled)
+      window.removeEventListener("error", handleChunkError)
+      window.removeEventListener("unhandledrejection", handleChunkError)
     }
   }, [])
 
