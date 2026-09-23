@@ -1,0 +1,54 @@
+{
+  "name": "joelmengemudi - Kursus Mengemudi",
+  "short_name": "joelmengemudi",
+  "description": "Aplikasi Kursus Mengemudi Resmi untuk Siswa dan Instruktur joelmengemudi",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#7ADA3A",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jadwal Saya (Siswa)",
+      "short_name": "Jadwal",
+      "description": "Lihat jadwal latihan mengemudi Anda",
+      "url": "/student/schedules",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Jadwal Mengajar (Instruktur)",
+      "short_name": "Mengajar",
+      "description": "Lihat agenda mengajar dan beri penilaian",
+      "url": "/instructor/schedules",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

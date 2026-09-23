@@ -1,0 +1,432 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  CUSTOMER_SERVICE
+  INSTRUCTOR
+  STUDENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum CourseType {
+  MANUAL
+  AUTOMATIC
+  BOTH
+}
+
+enum CourseStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  SUSPENDED
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  REFUNDED
+}
+
+enum ScheduleStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum RescheduleStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum VehicleIssueSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  EMERGENCY
+}
+
+enum VehicleIssueStatus {
+  REPORTED
+  CS_REVIEWED
+  APPROVED
+  IN_REPAIR
+  RESOLVED
+  REJECTED
+}
+
+enum SimType {
+  SIM_A
+  SIM_C
+}
+
+enum SimApplicationStatus {
+  SUBMITTED
+  VERIFIED
+  SCHEDULED_SATPAS
+  COMPLETED
+  REJECTED
+}
+
+enum LessonType {
+  THEORY
+  PRACTICE
+  EXAM
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  phone         String?
+  password      String
+  role          Role
+  gender        Gender?
+  address       String?
+  avatar        String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  branchId      String?
+  branch        Branch?   @relation(fields: [branchId], references: [id])
+
+  // Instructor-specific
+  licenseNumber String?
+  specialization CourseType?
+  instructorSchedules Schedule[] @relation("InstructorSchedules")
+  assignedVehicle Vehicle? @relation("InstructorVehicle")
+
+  // Student-specific
+  enrollments   Enrollment[]
+  payments      Payment[]
+  attendances   Attendance[]
+
+  // Ratings
+  givenRatings      InstructorRating[] @relation("StudentRatings")
+  receivedRatings   InstructorRating[] @relation("InstructorRatings")
+
+  // Vehicle reports by instructor
+  vehicleReports    VehicleReport[] @relation("InstructorVehicleReports")
+
+  // SIM Applications by student
+  simApplications   SimApplication[] @relation("StudentSimApplications")
+
+  // Notifications & Device Push Subscriptions
+  notifications     Notification[]     @relation("UserNotifications")
+  pushSubscriptions PushSubscription[] @relation("UserPushSubscriptions")
+
+  @@map("users")
+}
+
+model Branch {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  phone       String?
+  email       String?
+  city        String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  courses     Course[]
+  vehicles    Vehicle[]
+  enrollments Enrollment[]
+  schedules   Schedule[]
+  ratings     InstructorRating[]
+  vehicleReports VehicleReport[]
+  simApplications SimApplication[]
+
+  @@map("branches")
+}
+
+model Course {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  courseType  CourseType
+  duration    Int        // Total hours
+  sessions    Int        // Number of sessions
+  price       Float
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  branchId    String
+  branch      Branch     @relation(fields: [branchId], references: [id])
+  enrollments Enrollment[]
+  schedules   Schedule[]
+
+  @@map("courses")
+}
+
+model Vehicle {
+  id            String    @id @default(cuid())
+  plateNumber   String    @unique
+  brand         String
+  model         String
+  year          Int
+  transmission  CourseType // MANUAL or AUTOMATIC
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  branchId      String
+  branch        Branch    @relation(fields: [branchId], references: [id])
+  schedules     Schedule[]
+  instructorId  String?   @unique
+  instructor    User?     @relation("InstructorVehicle", fields: [instructorId], references: [id])
+  reports       VehicleReport[]
+
+  @@map("vehicles")
+}
+
+model Enrollment {
+  id          String       @id @default(cuid())
+  status      CourseStatus @default(ACTIVE)
+  startDate   DateTime
+  endDate     DateTime?
+  notes       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  studentId   String
+  student     User         @relation(fields: [studentId], references: [id])
+  courseId     String
+  course      Course       @relation(fields: [courseId], references: [id])
+  branchId    String
+  branch      Branch       @relation(fields: [branchId], references: [id])
+
+  payments    Payment[]
+  schedules   Schedule[]
+
+  @@map("enrollments")
+}
+
+model Schedule {
+  id          String         @id @default(cuid())
+  date        DateTime
+  startTime   String         // HH:mm format
+  endTime     String         // HH:mm format
+  lessonType  LessonType
+  status      ScheduleStatus @default(SCHEDULED)
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Reschedule Fields
+  rescheduleStatus          RescheduleStatus @default(NONE)
+  rescheduleRequestedBy     Role?
+  requestedDate             DateTime?
+  requestedStartTime        String?
+  requestedEndTime          String?
+  rescheduleReason          String?
+  rescheduleRejectionReason String?
+
+  // Relations
+  enrollmentId String
+  enrollment   Enrollment    @relation(fields: [enrollmentId], references: [id])
+  instructorId String
+  instructor   User          @relation("InstructorSchedules", fields: [instructorId], references: [id])
+  courseId      String
+  course        Course       @relation(fields: [courseId], references: [id])
+  branchId      String
+  branch        Branch       @relation(fields: [branchId], references: [id])
+  vehicleId     String?
+  vehicle       Vehicle?     @relation(fields: [vehicleId], references: [id])
+
+  attendance    Attendance?
+  rating        InstructorRating?
+
+  @@map("schedules")
+}
+
+model Attendance {
+  id          String   @id @default(cuid())
+  isPresent   Boolean  @default(false)
+  score       Int?     // 0-100
+  feedback    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  scheduleId  String   @unique
+  schedule    Schedule @relation(fields: [scheduleId], references: [id])
+  studentId   String
+  student     User     @relation(fields: [studentId], references: [id])
+
+  @@map("attendances")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  amount          Float
+  status          PaymentStatus @default(PENDING)
+  paymentMethod   String        @default("BANK_TRANSFER")
+  bankName        String?
+  accountName     String?
+  accountNumber   String?
+  transferProof   String?       // URL to uploaded image
+  confirmedBy     String?       // User ID of CS who confirmed
+  confirmedAt     DateTime?
+  rejectionReason String?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  studentId       String
+  student         User          @relation(fields: [studentId], references: [id])
+  enrollmentId    String
+  enrollment      Enrollment    @relation(fields: [enrollmentId], references: [id])
+
+  @@map("payments")
+}
+
+model BankAccount {
+  id            String   @id @default(cuid())
+  bankName      String   // BCA, BRI, Mandiri, BNI, dll.
+  accountNumber String
+  accountName   String
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("bank_accounts")
+}
+
+model InstructorRating {
+  id           String    @id @default(cuid())
+  rating       Int       // 1 to 5 stars
+  review       String?   // Ulasan / komentar siswa
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  studentId    String
+  student      User      @relation("StudentRatings", fields: [studentId], references: [id])
+  instructorId String
+  instructor   User      @relation("InstructorRatings", fields: [instructorId], references: [id])
+  scheduleId   String?   @unique
+  schedule     Schedule? @relation(fields: [scheduleId], references: [id])
+  branchId     String
+  branch       Branch    @relation(fields: [branchId], references: [id])
+
+  @@map("instructor_ratings")
+}
+
+model VehicleReport {
+  id              String               @id @default(cuid())
+  issueTitle      String               // Judul masalah (contoh: "Kopling Selip", "AC Kurang Dingin", "Rem Bunyi")
+  description     String               // Deskripsi rinci kerusakan
+  severity        VehicleIssueSeverity @default(MEDIUM)
+  status          VehicleIssueStatus   @default(REPORTED)
+  estimatedCost   Float?               // Estimasi biaya perbaikan
+  actualCost      Float?               // Biaya aktual
+  repairNotes     String?              // Catatan penanganan bengkel / perbaikan
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  resolvedAt      DateTime?
+
+  // Relations
+  vehicleId       String
+  vehicle         Vehicle              @relation(fields: [vehicleId], references: [id])
+  instructorId    String
+  instructor      User                 @relation("InstructorVehicleReports", fields: [instructorId], references: [id])
+  branchId        String
+  branch          Branch               @relation(fields: [branchId], references: [id])
+
+  @@map("vehicle_reports")
+}
+
+model SimApplication {
+  id                  String               @id @default(cuid())
+  simType             SimType              // SIM_A or SIM_C
+  price               Float                // 700000 (SIM A) or 625000 (SIM C)
+  fullName            String
+  nik                 String?
+  phone               String
+  address             String?
+  ktpPhoto            String?              // URL foto KTP
+  medicalDoc          String?              // Surat Sehat / Psikologi
+  status              SimApplicationStatus @default(SUBMITTED)
+  paymentStatus       PaymentStatus        @default(PENDING)
+  bankName            String?
+  accountName         String?
+  accountNumber       String?
+  transferProof       String?              // URL foto bukti transfer
+  satpasDate          DateTime?            // Jadwal keberangkatan ke Satpas
+  notes               String?
+  rejectionReason     String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  // Relations
+  studentId           String
+  student             User                 @relation("StudentSimApplications", fields: [studentId], references: [id])
+  branchId            String
+  branch              Branch               @relation(fields: [branchId], references: [id])
+
+  @@map("sim_applications")
+}
+
+enum NotificationType {
+  PAYMENT
+  SCHEDULE
+  RESCHEDULE
+  VEHICLE_REPORT
+  SIM_SERVICE
+  ENROLLMENT
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType @default(SYSTEM)
+  link      String?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserPushSubscriptions", fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}

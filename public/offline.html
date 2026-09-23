@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>joelmengemudi - Mode Offline</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 36px 28px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+    .icon-box {
+      width: 64px;
+      height: 64px;
+      background: rgba(122, 218, 58, 0.15);
+      border: 1px solid rgba(122, 218, 58, 0.3);
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .icon-box svg {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: #386E1B;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 12px 20px;
+      background: #7ADA3A;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 14px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn:hover {
+      background: #68c62f;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon-box">
+      <img src="/joel-logo.png" alt="Logo joelmengemudi" style="width: 48px; height: 48px; object-fit: contain;">
+    </div>
+    <h1>Koneksi Internet Terputus</h1>
+    <p>Aplikasi joelmengemudi membutuhkan jaringan internet untuk memuat data terkini. Silakan periksa koneksi Wi-Fi atau data seluler Anda.</p>
+    <button class="btn" onclick="window.location.reload()">Coba Muat Ulang</button>
+  </div>
+</body>
+</html>

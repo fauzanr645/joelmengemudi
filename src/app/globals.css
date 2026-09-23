@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-50: #f4fcee;
+  --color-brand-100: #e5f9d8;
+  --color-brand-200: #ccf3b4;
+  --color-brand-300: #a7ea84;
+  --color-brand-400: #88df55;
+  --color-brand-500: #7ada3a;
+  --color-brand-600: #5cb82a;
+  --color-brand-700: #448c20;
+  --color-brand-800: #396f1d;
+  --color-brand-900: #315c1c;
+  --color-brand-950: #163409;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --brand: #7ada3a;
+  --brand-hover: #6bc92d;
+  --brand-dark: #5cb82a;
+  --brand-deep: #2e6015;
+  --brand-light: #f4fcee;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7ada3a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5cb82a;
+}
+
+/* Brand glow utility */
+.brand-glow {
+  box-shadow: 0 4px 20px -2px rgba(122, 218, 58, 0.35);
+}
+
+.brand-glow-sm {
+  box-shadow: 0 2px 10px -1px rgba(122, 218, 58, 0.25);
+}
+
+.brand-gradient {
+  background: linear-gradient(135deg, #7ada3a 0%, #5cb82a 100%);
+}
+
+.brand-surface {
+  background: linear-gradient(180deg, #f4fcee 0%, #ffffff 100%);
+}
+
+/* Smooth keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(122, 218, 58, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(122, 218, 58, 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Form inputs */
+input, select, textarea {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #7ada3a !important;
+  box-shadow: 0 0 0 3px rgba(122, 218, 58, 0.22) !important;
 }
