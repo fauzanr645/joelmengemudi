@@ -4,6 +4,7 @@ import fs from "fs"
 import path from "path"
 import crypto from "crypto"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
+import { put } from "@vercel/blob"
 
 // Maksimal ukuran file upload: 5 MB
 const MAX_FILE_SIZE = 5 * 1024 * 1024
@@ -128,6 +129,22 @@ export async function POST(request: Request) {
     // Buat nama file aman dengan UUID / random bytes acak (Mencegah Directory Traversal & Overwrite)
     const randomSuffix = crypto.randomBytes(8).toString("hex")
     const cleanFilename = `upload-${baseName.substring(0, 30)}-${Date.now()}-${randomSuffix}.webp`
+
+    // OPSI A: Jika terhubung ke Vercel Blob Storage (Production di Vercel)
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(`uploads/${cleanFilename}`, fileBuffer, {
+        access: "public",
+        contentType: "image/webp",
+      })
+
+      return NextResponse.json({
+        url: blob.url,
+        filename: cleanFilename,
+        size: fileBuffer.length,
+      })
+    }
+
+    // OPSI B: Fallback Local Development (Simpan ke folder public/uploads)
     const targetFilePath = path.join(uploadsDir, cleanFilename)
 
     // Validasi Path Traversal: pastikan target file berada di dalam uploadsDir
