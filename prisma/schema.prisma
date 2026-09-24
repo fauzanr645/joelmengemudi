@@ -131,6 +131,8 @@ model User {
   notifications     Notification[]     @relation("UserNotifications")
   pushSubscriptions PushSubscription[] @relation("UserPushSubscriptions")
 
+  @@index([role, branchId])
+  @@index([branchId])
   @@map("users")
 }
 
@@ -221,6 +223,8 @@ model Enrollment {
   payments    Payment[]
   schedules   Schedule[]
 
+  @@index([studentId])
+  @@index([branchId, status])
   @@map("enrollments")
 }
 
@@ -259,6 +263,10 @@ model Schedule {
   attendance    Attendance?
   rating        InstructorRating?
 
+  @@index([date, status])
+  @@index([instructorId, date])
+  @@index([branchId, date])
+  @@index([enrollmentId])
   @@map("schedules")
 }
 
@@ -301,6 +309,8 @@ model Payment {
   enrollmentId    String
   enrollment      Enrollment    @relation(fields: [enrollmentId], references: [id])
 
+  @@index([studentId, status])
+  @@index([enrollmentId])
   @@map("payments")
 }
 
@@ -357,6 +367,8 @@ model VehicleReport {
   branchId        String
   branch          Branch               @relation(fields: [branchId], references: [id])
 
+  @@index([branchId, status])
+  @@index([vehicleId])
   @@map("vehicle_reports")
 }
 
@@ -388,6 +400,8 @@ model SimApplication {
   branchId            String
   branch              Branch               @relation(fields: [branchId], references: [id])
 
+  @@index([studentId, status])
+  @@index([branchId, status])
   @@map("sim_applications")
 }
 
