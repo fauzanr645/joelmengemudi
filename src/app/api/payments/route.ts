@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     }
 
     const userRole = (session.user as any).role
-    // Instruktur tidak memiliki hak akses data pembayaran
+
     if (userRole === "INSTRUCTOR") {
       return NextResponse.json({ error: "Akses ditolak" }, { status: 403 })
     }
@@ -68,10 +68,8 @@ export async function POST(request: Request) {
     const userRole = (session.user as any).role
     const body = await request.json()
 
-    // Siswa hanya boleh membuat tagihan / pembayaran untuk dirinya sendiri
     const targetStudentId = userRole === "STUDENT" ? session.user.id : (body.studentId || session.user.id)
 
-    // Validasi enrollmentId milik siswa bersangkutan
     if (userRole === "STUDENT" && body.enrollmentId) {
       const enrollment = await prisma.enrollment.findUnique({
         where: { id: body.enrollmentId },
@@ -99,3 +97,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

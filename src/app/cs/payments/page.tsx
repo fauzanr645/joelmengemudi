@@ -69,16 +69,13 @@ export default function PaymentsPage() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([])
   const [activeFilter, setActiveFilter] = useState<"ALL" | "PENDING_PROOF" | "PENDING_BILLS" | "CONFIRMED">("ALL")
 
-  // Modal States
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null)
   const [isRejectOpen, setIsRejectOpen] = useState(false)
   const [rejectionReason, setRejectionReason] = useState("")
 
-  // View Full Proof Modal
   const [previewProofPayment, setPreviewProofPayment] = useState<Payment | null>(null)
   const [isProofModalOpen, setIsProofModalOpen] = useState(false)
 
-  // Create Bill Modal State
   const [isCreateBillOpen, setIsCreateBillOpen] = useState(false)
   const [billTypeOption, setBillTypeOption] = useState<"HALF" | "FULL" | "REMAINING" | "CUSTOM">("HALF")
   const [billForm, setBillForm] = useState({
@@ -94,8 +91,8 @@ export default function PaymentsPage() {
   const fetchData = async () => {
     try {
       const [payRes, enrollRes] = await Promise.all([
-        fetch("/api/payments"), // strictly CS branch
-        fetch("/api/enrollments"), // strictly CS branch
+        fetch("/api/payments"), 
+        fetch("/api/enrollments"), 
       ])
       setPayments(await payRes.json())
       setEnrollments(await enrollRes.json())
@@ -154,7 +151,6 @@ export default function PaymentsPage() {
     }
   }
 
-  // Create Bill / Invoice Submission
   const openCreateBillModal = () => {
     const firstEn = enrollments.find((e) => e.status === "ACTIVE") || enrollments[0]
     const initialPrice = firstEn ? firstEn.course.price / 2 : 0
@@ -251,7 +247,6 @@ export default function PaymentsPage() {
     setIsProofModalOpen(true)
   }
 
-  // Filter Categories
   const paymentsWithProof = payments.filter((p) => p.status === "PENDING" && Boolean(p.transferProof))
   const unpaidBills = payments.filter((p) => p.status === "PENDING" && !p.transferProof)
   const confirmedPayments = payments.filter((p) => p.status === "CONFIRMED")
@@ -412,7 +407,7 @@ export default function PaymentsPage() {
         } else if (item.transferProof) {
           waMsg = `Halo Kak ${item.student.name}, bukti transfer Anda sebesar ${formatCurrency(item.amount)} sedang diverifikasi oleh CS joelmengemudi. Terima kasih!`
         } else {
-          // Tagihan belum diupload bukti
+
           waMsg = `Halo Kak ${item.student.name}, kami telah menerbitkan tagihan kursus ${item.enrollment.course.name} sebesar ${formatCurrency(item.amount)} (${item.notes || "Tagihan Pembayaran"}). Mohon lakukan transfer dan upload bukti transfer melalui web/aplikasi joelmengemudi. Terima kasih!`
         }
 
@@ -420,7 +415,7 @@ export default function PaymentsPage() {
 
         return (
           <div className="flex items-center gap-1.5 justify-end">
-            {/* Tombol WA */}
+
             {item.student.phone && (
               <a
                 href={waUrl}
@@ -434,7 +429,6 @@ export default function PaymentsPage() {
               </a>
             )}
 
-            {/* Tombol Buka Bukti Transfer jika ada */}
             {item.transferProof && (
               <button
                 onClick={() => openProofModal(item)}
@@ -445,7 +439,6 @@ export default function PaymentsPage() {
               </button>
             )}
 
-            {/* Tombol Konfirmasi / Tolak jika PENDING */}
             {item.status === "PENDING" && (
               <div className="flex items-center gap-1">
                 <button
@@ -475,7 +468,7 @@ export default function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Create Bill Button */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -496,7 +489,6 @@ export default function PaymentsPage() {
         </Button>
       </div>
 
-      {/* Global Alerts */}
       {successMsg && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs sm:text-sm text-emerald-900 font-bold flex items-center gap-2.5 shadow-2xs animate-fade-in">
           <CheckCircle2 size={18} className="text-[#386E1B] shrink-0" />
@@ -511,7 +503,6 @@ export default function PaymentsPage() {
         </div>
       )}
 
-      {/* Filter Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveFilter("ALL")}
@@ -575,7 +566,6 @@ export default function PaymentsPage() {
         emptyMessage="Belum ada transaksi pembayaran pada kategori ini."
       />
 
-      {/* MODAL TERBITKAN TAGIHAN SISWA BARU */}
       <Modal
         isOpen={isCreateBillOpen}
         onClose={() => setIsCreateBillOpen(false)}
@@ -609,7 +599,6 @@ export default function PaymentsPage() {
             }))}
           />
 
-          {/* Opsi Cepat Tipe Tagihan */}
           {selectedEnrollmentForBill && (
             <div className="space-y-2 p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
               <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
@@ -715,7 +704,6 @@ export default function PaymentsPage() {
         </form>
       </Modal>
 
-      {/* MODAL PRATINJAU BUKTI TRANSFER UKURAN PENUH UNTUK CS */}
       <Modal
         isOpen={isProofModalOpen}
         onClose={() => setIsProofModalOpen(false)}
@@ -725,7 +713,7 @@ export default function PaymentsPage() {
       >
         {previewProofPayment && (
           <div className="space-y-4">
-            {/* Info Rincian */}
+
             <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Nama Siswa:</span>
@@ -747,7 +735,6 @@ export default function PaymentsPage() {
               </div>
             </div>
 
-            {/* Gambar Bukti Transfer */}
             {previewProofPayment.transferProof ? (
               <div className="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 flex items-center justify-center p-2 relative">
                 <img
@@ -762,7 +749,6 @@ export default function PaymentsPage() {
               </div>
             )}
 
-            {/* Tombol Aksi Verifikasi Langsung */}
             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
               {previewProofPayment.transferProof ? (
                 <a
@@ -813,7 +799,6 @@ export default function PaymentsPage() {
         )}
       </Modal>
 
-      {/* Modal Tolak Pembayaran */}
       <Modal
         isOpen={isRejectOpen}
         onClose={() => setIsRejectOpen(false)}
@@ -847,3 +832,4 @@ export default function PaymentsPage() {
     </div>
   )
 }
+

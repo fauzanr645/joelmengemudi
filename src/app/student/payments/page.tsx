@@ -79,16 +79,13 @@ export default function StudentPaymentsPage() {
   const [copiedBank, setCopiedBank] = useState<string | null>(null)
   const [paymentOption, setPaymentOption] = useState<"HALF" | "FULL" | "REMAINING" | "CUSTOM">("HALF")
 
-  // Target payment ID if paying an existing bill from CS
   const [targetBillId, setTargetBillId] = useState<string | null>(null)
 
-  // WebP Image Upload State
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
   const [webpResult, setWebpResult] = useState<WebPConversionResult | null>(null)
   const [isConvertingImage, setIsConvertingImage] = useState(false)
   const [imageError, setImageError] = useState<string>("")
 
-  // Preview Proof Modal
   const [previewProofUrl, setPreviewProofUrl] = useState<string | null>(null)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
 
@@ -137,7 +134,6 @@ export default function StudentPaymentsPage() {
     fetchData()
   }, [])
 
-  // Calculate billing status for a given enrollment
   const getEnrollmentBilling = (en: Enrollment) => {
     const coursePrice = en.course.price
     const paymentsList = en.payments || []
@@ -163,10 +159,8 @@ export default function StudentPaymentsPage() {
     }
   }
 
-  // Tagihan yang diterbitkan oleh CS yang belum diupload bukti transfer
   const unpaidBillsFromCS = payments.filter((p) => !p.transferProof && p.status === "PENDING")
 
-  // Open modal with pre-calculated options
   const openPaymentModalForEnrollment = (
     en: Enrollment,
     preferredMode?: "HALF" | "REMAINING" | "FULL" | "CUSTOM",
@@ -223,7 +217,6 @@ export default function StudentPaymentsPage() {
     setIsModalOpen(true)
   }
 
-  // Handle Image File Selection & Auto-Convert to .webp
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -233,7 +226,7 @@ export default function StudentPaymentsPage() {
     setIsConvertingImage(true)
 
     try {
-      // Auto convert to WebP
+
       const result = await convertImageToWebP(file, 0.85)
       setWebpResult(result)
     } catch (err: any) {
@@ -287,9 +280,8 @@ export default function StudentPaymentsPage() {
     try {
       let uploadedWebpUrl: string | null = null
 
-      // 1. Upload WebP Image if provided
       if (webpResult) {
-        // Upload base64 WebP or form-data
+
         const uploadRes = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -306,9 +298,8 @@ export default function StudentPaymentsPage() {
         uploadedWebpUrl = uploadData.url
       }
 
-      // 2. Submit payment or update existing bill
       if (targetBillId) {
-        // Update existing bill with student's bank info & webp proof
+
         const res = await fetch(`/api/payments/${targetBillId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -327,7 +318,7 @@ export default function StudentPaymentsPage() {
           throw new Error(err.error || "Gagal mengonfirmasi pembayaran tagihan.")
         }
       } else {
-        // Create new payment
+
         const res = await fetch("/api/payments", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -498,7 +489,7 @@ export default function StudentPaymentsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Status & Pembayaran Kursus</h1>
@@ -523,7 +514,6 @@ export default function StudentPaymentsPage() {
         </Button>
       </div>
 
-      {/* SECTION: TAGIHAN DARI CUSTOMER SERVICE (JIKA ADA) */}
       {unpaidBillsFromCS.length > 0 && (
         <div className="p-5 rounded-3xl bg-amber-50/90 border border-amber-200/90 shadow-sm space-y-3 animate-fade-in">
           <div className="flex items-center justify-between">
@@ -582,7 +572,6 @@ export default function StudentPaymentsPage() {
         </div>
       )}
 
-      {/* Course Billing Summary Cards */}
       {enrollments.length > 0 && (
         <div className="space-y-2.5">
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 px-1">
@@ -628,7 +617,6 @@ export default function StudentPaymentsPage() {
                     </div>
                   </div>
 
-                  {/* Progress Bar & Balances */}
                   <div className="space-y-1.5 pt-2 border-t border-slate-100">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-slate-500 font-medium">Terbayar:</span>
@@ -653,7 +641,6 @@ export default function StudentPaymentsPage() {
                     </div>
                   </div>
 
-                  {/* Quick Action Buttons */}
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
                     {!b.isFullyPaid && (
                       <>
@@ -686,7 +673,6 @@ export default function StudentPaymentsPage() {
         </div>
       )}
 
-      {/* Official Bank Account Cards with 1-Click Copy */}
       <div className="space-y-2.5">
         <p className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 px-1">
           <CreditCard size={14} className="text-[#3c7717]" />
@@ -729,7 +715,6 @@ export default function StudentPaymentsPage() {
         emptyMessage="Belum ada transaksi pembayaran yang dikirimkan."
       />
 
-      {/* MODAL KONFIRMASI PEMBAYARAN + UPLOAD BUKTI TRANSFER */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -763,7 +748,6 @@ export default function StudentPaymentsPage() {
             }))}
           />
 
-          {/* Payment Amount Choice: 50% vs 100% vs Pelunasan (If not direct bill) */}
           {!targetBillId && selectedEnrollment && currentBilling && (
             <div className="space-y-2 p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200/80">
               <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
@@ -852,7 +836,6 @@ export default function StudentPaymentsPage() {
             required
           />
 
-          {/* UPLOAD FOTO BUKTI TRANSFER */}
           <div className="space-y-2 p-3.5 bg-emerald-50/50 rounded-2xl border border-emerald-200">
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center justify-between">
               <span className="flex items-center gap-1.5">
@@ -976,7 +959,6 @@ export default function StudentPaymentsPage() {
         </form>
       </Modal>
 
-      {/* MODAL PRATINJAU BUKTI TRANSFER UKURAN PENUH */}
       <Modal
         isOpen={isPreviewModalOpen}
         onClose={() => setIsPreviewModalOpen(false)}
@@ -1014,3 +996,4 @@ export default function StudentPaymentsPage() {
     </div>
   )
 }
+

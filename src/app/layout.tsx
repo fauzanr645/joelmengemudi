@@ -3,7 +3,11 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { PwaProvider } from "@/components/pwa-provider"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+})
 
 export const viewport: Viewport = {
   themeColor: "#7ADA3A",
@@ -49,3 +53,4 @@ export default function RootLayout({
     </html>
   )
 }
+

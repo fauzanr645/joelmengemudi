@@ -6,7 +6,6 @@ const prisma = new PrismaClient()
 async function main() {
   console.log("=== RESETTING DATABASE & SEEDING 5 BALI BRANCHES (1 CAR PER INSTRUCTOR) ===")
 
-  // 1. Wipe all data completely in strict foreign key order
   await prisma.vehicleReport.deleteMany()
   await prisma.simApplication.deleteMany()
   await prisma.instructorRating.deleteMany()
@@ -22,7 +21,6 @@ async function main() {
 
   console.log("✓ All existing database tables wiped clean")
 
-  // 2. Create the 5 Official Branches:
   const bHeadOffice = await prisma.branch.create({
     data: {
       name: "Head Office",
@@ -78,7 +76,6 @@ async function main() {
 
   const defaultPassword = await hash("password123", 12)
 
-  // 3. Create Owner Account
   await prisma.user.create({
     data: {
       name: "Budi Santoso",
@@ -92,7 +89,6 @@ async function main() {
   })
   console.log("✓ Owner created (owner@demo.com)")
 
-  // 4. Create 1 Customer Service per branch (Total 5 CS)
   const csAccounts = [
     { name: "Siti Rahayu (CS Head Office)", email: "cs@demo.com", phone: "081234567801", branchId: bHeadOffice.id, address: "Denpasar" },
     { name: "Ni Putu Ayu (CS Sesetan)", email: "cs.sesetan@demo.com", phone: "081234567802", branchId: bSesetan.id, address: "Sesetan, Denpasar" },
@@ -117,7 +113,6 @@ async function main() {
   }
   console.log("✓ 5 Customer Service created (1 per branch)")
 
-  // 5. Create 7 Standard Course Packages per branch (Total 35 Packages)
   const courseTemplates = [
     {
       name: "Paket Manual 4 Jam",
@@ -175,7 +170,6 @@ async function main() {
       sessions: 6,
       price: 1475000,
     },
-    // PAKET KURSUS + PEMBUATAN SIM A (PENDEKATAN A)
     {
       name: "Paket Manual + SIM A 10 Jam",
       description: "Paket Lengkap: 10 Jam Latihan (5x sesi latihan @ 2 jam setiap sesi, sudah termasuk pembuatan SIM A)",
@@ -216,38 +210,31 @@ async function main() {
   }
   console.log(`✓ ${createdCourses.length} Course Packages created (10 per branch: 7 reguler + 3 paket kursus + SIM A)`)
 
-  // 6. Create EXACTLY 5 Instructors per branch (Total 25 Instructors)
-  // In each branch: 3 Manual Instructors and 2 Automatic Instructors
   const instructorProfiles = [
-    // Branch 1: Head Office (5)
     { name: "Ahmad Fauzi", spec: "MANUAL" as const },
     { name: "I Wayan Sudira", spec: "MANUAL" as const },
     { name: "I Made Sujana", spec: "MANUAL" as const },
     { name: "I Nyoman Ardana", spec: "AUTOMATIC" as const },
     { name: "I Ketut Wirawan", spec: "AUTOMATIC" as const },
 
-    // Branch 2: Office Sesetan (5)
     { name: "I Wayan Raka", spec: "MANUAL" as const },
     { name: "I Made Sukadana", spec: "MANUAL" as const },
     { name: "I Nyoman Subagia", spec: "MANUAL" as const },
     { name: "I Ketut Suartana", spec: "AUTOMATIC" as const },
     { name: "Gede Eka Putra", spec: "AUTOMATIC" as const },
 
-    // Branch 3: Office Bangli (5)
     { name: "I Wayan Mandra", spec: "MANUAL" as const },
     { name: "I Made Sugiarta", spec: "MANUAL" as const },
     { name: "I Nyoman Yasa", spec: "MANUAL" as const },
     { name: "I Ketut Guna", spec: "AUTOMATIC" as const },
     { name: "Gede Sukarma", spec: "AUTOMATIC" as const },
 
-    // Branch 4: Drop Point Mengwi (5)
     { name: "I Wayan Tirtayasa", spec: "MANUAL" as const },
     { name: "I Made Wirata", spec: "MANUAL" as const },
     { name: "I Nyoman Kaler", spec: "MANUAL" as const },
     { name: "I Ketut Suweta", spec: "AUTOMATIC" as const },
     { name: "Gede Merta", spec: "AUTOMATIC" as const },
 
-    // Branch 5: Office Gianyar (5)
     { name: "I Wayan Celuk", spec: "MANUAL" as const },
     { name: "I Made Sukawati", spec: "MANUAL" as const },
     { name: "I Nyoman Gianyar", spec: "MANUAL" as const },
@@ -286,16 +273,11 @@ async function main() {
   }
   console.log(`✓ Exactly ${createdInstructors.length} Instructors created (5 per branch x 5 branches)`)
 
-  // 7. Create EXACTLY 5 Vehicles per branch (Total 25 Vehicles)
-  // Each vehicle is STRICTLY DEDICATED 1:1 to one instructor matching transmission!
-  // ALL PLATES MUST BE "DK" (Bali region)
   const branchPlateSuffixes = ["HO", "SS", "BG", "MW", "GY"]
   const carTemplates = [
-    // 3 Manual cars for 3 Manual instructors
     { brand: "Toyota", model: "Avanza G", year: 2023, transmission: "MANUAL" as const },
     { brand: "Daihatsu", model: "Xenia R", year: 2022, transmission: "MANUAL" as const },
     { brand: "Suzuki", model: "Ertiga GL", year: 2023, transmission: "MANUAL" as const },
-    // 2 Automatic cars for 2 Automatic instructors
     { brand: "Honda", model: "Brio Satya E", year: 2024, transmission: "AUTOMATIC" as const },
     { brand: "Toyota", model: "Agya GR", year: 2023, transmission: "AUTOMATIC" as const },
   ]
@@ -319,7 +301,7 @@ async function main() {
           year: modelInfo.year,
           transmission: modelInfo.transmission,
           branchId: branch.id,
-          instructorId: dedicatedInstructor.id, // Dedicated 1:1 to this instructor
+          instructorId: dedicatedInstructor.id,
           isActive: true,
         },
       })
@@ -328,7 +310,6 @@ async function main() {
   }
   console.log(`✓ Exactly ${createdVehicles.length} Vehicles created (5 per branch x 5 branches, 1:1 dedicated to instructors, ALL DK PLATES)`)
 
-  // 8. Create EXACTLY 10 Students per branch (Total 50 Students)
   const studentFirstNames = [
     "Rina", "Ni Putu", "Ni Made", "Ni Nyoman", "Ni Ketut",
     "Dewi", "Ghea", "Maya", "Ayu", "Komang",
@@ -349,7 +330,7 @@ async function main() {
 
     for (let s = 0; s < 10; s++) {
       const globalIdx = bIndex * 10 + s
-      const isMainDemo = globalIdx === 0 // first student is siswa@demo.com
+      const isMainDemo = globalIdx === 0
       const fName = studentFirstNames[(s + bIndex * 2) % studentFirstNames.length]
       const lName = studentLastNames[(s + bIndex * 3) % studentLastNames.length]
       const name = `${fName} ${lName}`
@@ -374,7 +355,6 @@ async function main() {
   }
   console.log(`✓ Exactly ${createdStudents.length} Students created (10 per branch x 5 branches)`)
 
-  // 9. Enroll Students, Assign to matching Instructor & their Fixed Vehicle, Schedules & Payments
   const baseDate = new Date()
   const timeSlots = ["08:00", "10:00", "13:00", "15:00"]
 
@@ -392,11 +372,9 @@ async function main() {
     const student = createdStudents[sIdx]
     const bId = student.branchId!
 
-    // Pick course package for this student
     const branchCourses = createdCourses.filter(c => c.branchId === bId)
     const chosenCourse = branchCourses[sIdx % branchCourses.length]
 
-    // Create Enrollment
     const enrollment = await prisma.enrollment.create({
       data: {
         studentId: student.id,
@@ -408,27 +386,23 @@ async function main() {
       },
     })
 
-    // Find instructor in this branch matching course transmission
     const branchInstructorsList = createdInstructors.filter(i => i.branchId === bId)
     let matchingInstructors = branchInstructorsList.filter(i => {
       if (chosenCourse.courseType === "MANUAL") return i.specialization === "MANUAL"
       if (chosenCourse.courseType === "AUTOMATIC") return i.specialization === "AUTOMATIC"
-      return true // BOTH
+      return true
     })
     if (matchingInstructors.length === 0) matchingInstructors = branchInstructorsList
 
     const assignedInstructor = matchingInstructors[sIdx % matchingInstructors.length]
 
-    // The vehicle is strictly the instructor's dedicated vehicle!
     const assignedVehicle = createdVehicles.find(v => v.instructorId === assignedInstructor.id) ||
       createdVehicles.filter(v => v.branchId === bId)[0]
 
-    // Pick time slot
     const slotStartTime = timeSlots[sIdx % timeSlots.length]
     const startHourNum = parseInt(slotStartTime.split(":")[0], 10)
     const slotEndTime = `${(startHourNum + 2).toString().padStart(2, "0")}:00`
 
-    // Generate all sessions for this enrollment
     for (let sess = 0; sess < chosenCourse.sessions; sess++) {
       const isPast = sess < Math.min(2, chosenCourse.sessions - 1) && sIdx % 2 === 0
       const dayOffset = (sIdx % 4) - 2 + sess * 2
@@ -444,7 +418,7 @@ async function main() {
           instructorId: assignedInstructor.id,
           courseId: chosenCourse.id,
           branchId: bId,
-          vehicleId: assignedVehicle.id, // Fixed car dedicated to this instructor
+          vehicleId: assignedVehicle.id,
           date: schedDate,
           startTime: slotStartTime,
           endTime: slotEndTime,
@@ -455,7 +429,6 @@ async function main() {
       })
       totalSchedulesCount++
 
-      // If completed, add attendance and rating
       if (isPast) {
         await prisma.attendance.create({
           data: {
@@ -483,7 +456,6 @@ async function main() {
       }
     }
 
-    // Create Payment (Alternate Confirmed full, Half DP 50%, and Pending Invoice)
     const payMode = sIdx % 3
     if (payMode === 0) {
       await prisma.payment.create({
@@ -529,7 +501,6 @@ async function main() {
     }
   }
 
-  // 10. Official Bank Accounts
   await prisma.bankAccount.createMany({
     data: [
       { bankName: "BCA", accountNumber: "1234567890", accountName: "PT Joel Mengemudi Jaya", isActive: true },
@@ -539,7 +510,6 @@ async function main() {
   })
   console.log("✓ Official Bank Accounts created")
 
-  // 11. Create Realistic Sample SIM Applications (Layanan Pembuatan SIM Khusus: SIM A 700rb & SIM C 625rb)
   const sampleSimApps = [
     {
       studentId: createdStudents[0].id,
@@ -575,7 +545,7 @@ async function main() {
       notes: "Berkas KTP & Surat Kesehatan lengkap diverifikasi CS.",
     },
     {
-      studentId: createdStudents[10].id, // Sesetan student
+      studentId: createdStudents[10].id,
       branchId: bSesetan.id,
       simType: "SIM_A" as const,
       price: 700000,
@@ -591,7 +561,7 @@ async function main() {
       notes: "Pengajuan baru SIM A, menunggu verifikasi bukti transfer.",
     },
     {
-      studentId: createdStudents[20].id, // Bangli student
+      studentId: createdStudents[20].id,
       branchId: bBangli.id,
       simType: "SIM_C" as const,
       price: 625000,
@@ -649,3 +619,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect()
   })
+

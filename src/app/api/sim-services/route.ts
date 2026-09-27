@@ -21,7 +21,6 @@ export async function GET(request: Request) {
     if (userRole === "STUDENT") {
       where.studentId = session.user.id
 
-      // Auto-sync SIM A application if student is enrolled in a course package with "+ SIM"
       const simEnrollment = await prisma.enrollment.findFirst({
         where: {
           studentId: session.user.id,
@@ -109,7 +108,6 @@ export async function POST(request: Request) {
       if (body.branchId) branchId = body.branchId
     }
 
-    // Get student details if missing
     const studentUser = await prisma.user.findUnique({
       where: { id: studentId },
     })
@@ -148,7 +146,6 @@ export async function POST(request: Request) {
       },
     })
 
-    // Kirim notifikasi ke CS Cabang dan Owner
     try {
       await sendNotificationToRole("CUSTOMER_SERVICE", branchId, {
         title: `Pengajuan Layanan SIM Baru (${simType === "SIM_A" ? "SIM A" : "SIM C"}) 🪪`,
@@ -172,3 +169,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

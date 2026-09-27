@@ -10,7 +10,6 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Rate Limit: Maksimal 5 tes per menit per pengguna
     const limit = checkRateLimit(`test-notif:${session.user.id}`, 5, 60_000)
     if (!limit.allowed) {
       return NextResponse.json(
@@ -38,3 +37,4 @@ export async function POST() {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

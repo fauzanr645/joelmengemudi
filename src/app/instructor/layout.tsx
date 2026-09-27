@@ -42,3 +42,4 @@ export default async function InstructorLayout({ children }: { children: React.R
     </div>
   )
 }
+

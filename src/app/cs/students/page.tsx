@@ -42,7 +42,6 @@ export default function StudentsPage() {
     name: "", email: "", phone: "", password: "", gender: "", address: "",
   })
 
-  // Schedule detail modal state
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [studentSchedules, setStudentSchedules] = useState<StudentSchedule[]>([])
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false)
@@ -191,7 +190,6 @@ export default function StudentsPage() {
         )}
       />
 
-      {/* Modal All Schedules for Student */}
       <Modal
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
@@ -263,7 +261,6 @@ export default function StudentsPage() {
         </div>
       </Modal>
 
-      {/* Modal Add Student */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Tambah Siswa Baru">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="Nama Lengkap" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
@@ -288,3 +285,4 @@ export default function StudentsPage() {
     </div>
   )
 }
+

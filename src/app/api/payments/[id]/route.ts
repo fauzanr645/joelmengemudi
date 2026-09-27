@@ -55,7 +55,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Data pembayaran tidak ditemukan" }, { status: 404 })
     }
 
-    // 1. Jika pengguna adalah SISWA (Membayar tagihan / mengunggah bukti transfer)
     if (userRole === "STUDENT") {
       if (existingPayment.studentId !== session.user.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
@@ -69,7 +68,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       if (body.amount !== undefined) updateData.amount = Number(body.amount)
       if (body.notes !== undefined) updateData.notes = body.notes
 
-      // Pastikan status tetap PENDING menunggu verifikasi CS
       updateData.status = "PENDING"
       updateData.rejectionReason = null
 
@@ -79,7 +77,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         include: { student: { select: { name: true } }, enrollment: true },
       })
 
-      // Notifikasi ke CS Cabang & Owner bahwa ada bukti transfer masuk
       try {
         await sendNotificationToRole("CUSTOMER_SERVICE", existingPayment.enrollment.branchId, {
           title: "Bukti Transfer Pembayaran Masuk 💳",
@@ -100,7 +97,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json(updated)
     }
 
-    // 2. Jika pengguna adalah CS atau OWNER (Verifikasi, Tolak, atau Update Tagihan)
     if (["OWNER", "CUSTOMER_SERVICE"].includes(userRole)) {
       const updateData: any = {}
 
@@ -115,7 +111,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
       }
 
-      // CS bisa mengubah detail tagihan sebelum dibayar
       if (body.amount !== undefined) updateData.amount = Number(body.amount)
       if (body.notes !== undefined) updateData.notes = body.notes
       if (body.bankName !== undefined) updateData.bankName = body.bankName
@@ -126,7 +121,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         include: { student: { select: { id: true, name: true } } },
       })
 
-      // Notifikasi ke Siswa & Owner saat pembayaran diverifikasi atau ditolak
       try {
         if (body.status === "CONFIRMED") {
           await sendNotificationToUser(existingPayment.studentId, {
@@ -188,3 +182,4 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

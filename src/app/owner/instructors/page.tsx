@@ -59,7 +59,6 @@ export default function InstructorsPage() {
     licenseNumber: "", specialization: "",
   })
 
-  // Review Details Modal
   const [selectedInstructorForReview, setSelectedInstructorForReview] = useState<Instructor | null>(null)
   const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false)
 
@@ -87,7 +86,6 @@ export default function InstructorsPage() {
   const getBranchCount = (branchId: string) =>
     allInstructors.filter(u => u.branchId === branchId).length
 
-  // Helper calculate rating stats
   const getInstructorRatingStats = (instructorId: string) => {
     const instRatings = ratings.filter((r: any) => r.instructorId === instructorId || r.instructor?.id === instructorId)
     if (instRatings.length === 0) return { avg: 0, count: 0, items: [] }
@@ -279,7 +277,6 @@ export default function InstructorsPage() {
         </Button>
       </div>
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -347,7 +344,6 @@ export default function InstructorsPage() {
         )}
       />
 
-      {/* MODAL LIHAT RATING & ULASAN SISWA (OWNER VIEW) */}
       <Modal
         isOpen={isReviewsModalOpen}
         onClose={() => setIsReviewsModalOpen(false)}
@@ -447,7 +443,6 @@ export default function InstructorsPage() {
         )}
       </Modal>
 
-      {/* Modal Add / Edit Instructor */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -559,3 +554,4 @@ export default function InstructorsPage() {
     </div>
   )
 }
+

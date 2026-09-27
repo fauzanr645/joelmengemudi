@@ -32,7 +32,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -51,7 +50,6 @@ body {
   background: #5cb82a;
 }
 
-/* Brand glow utility */
 .brand-glow {
   box-shadow: 0 4px 20px -2px rgba(122, 218, 58, 0.35);
 }
@@ -68,7 +66,6 @@ body {
   background: linear-gradient(180deg, #f4fcee 0%, #ffffff 100%);
 }
 
-/* Smooth keyframes */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -97,7 +94,6 @@ body {
   animation: pulseGlow 2s infinite;
 }
 
-/* Form inputs */
 input, select, textarea {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }

@@ -86,7 +86,7 @@ export default async function CSDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
+
       <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 text-white overflow-hidden shadow-xl border border-slate-700/50">
         <div className="absolute right-0 top-0 -mt-8 -mr-8 w-72 h-72 bg-[#7ADA3A]/15 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -114,7 +114,6 @@ export default async function CSDashboard() {
         </div>
       </div>
 
-      {/* Metrics Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         <StatCard
           title="Siswa Terdaftar"
@@ -150,9 +149,8 @@ export default async function CSDashboard() {
         />
       </div>
 
-      {/* Grid Content: Pending Payments & Today's Schedule */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Pending Payments */}
+
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-sm">
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
             <div>
@@ -199,7 +197,6 @@ export default async function CSDashboard() {
           </div>
         </div>
 
-        {/* Today's Schedule Live Feed */}
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-sm">
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
             <div>
@@ -248,3 +245,4 @@ export default async function CSDashboard() {
     </div>
   )
 }
+

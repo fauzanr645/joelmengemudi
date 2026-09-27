@@ -66,23 +66,19 @@ export default function OwnerSettingsPage() {
   const [selectedBranch, setSelectedBranch] = useState<string>("ALL")
   const [branches, setBranches] = useState<Branch[]>([])
 
-  // Account Lists
   const [csList, setCsList] = useState<UserAccount[]>([])
   const [instructorList, setInstructorList] = useState<UserAccount[]>([])
   const [ownerData, setOwnerData] = useState<any>(null)
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
 
-  // Loading & Feedback
   const [isLoading, setIsLoading] = useState(false)
   const [successMsg, setSuccessMsg] = useState<string>("")
   const [errorMsg, setErrorMsg] = useState<string>("")
 
-  // Reset Password Modal
   const [resetTargetUser, setResetTargetUser] = useState<UserAccount | null>(null)
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false)
   const [newPassword, setNewPassword] = useState<string>("password123")
 
-  // Edit User Modal
   const [editingTargetUser, setEditingTargetUser] = useState<UserAccount | null>(null)
   const [isEditUserOpen, setIsEditUserOpen] = useState(false)
   const [editForm, setEditForm] = useState({
@@ -97,7 +93,6 @@ export default function OwnerSettingsPage() {
     isActive: true,
   })
 
-  // Owner Profile Form
   const [ownerForm, setOwnerForm] = useState({
     name: "",
     email: "",
@@ -107,7 +102,6 @@ export default function OwnerSettingsPage() {
     confirmPassword: "",
   })
 
-  // Bank Account Modal State
   const [isBankModalOpen, setIsBankModalOpen] = useState(false)
   const [editingBankAccount, setEditingBankAccount] = useState<BankAccount | null>(null)
   const [bankForm, setBankForm] = useState({
@@ -117,7 +111,6 @@ export default function OwnerSettingsPage() {
     isActive: true,
   })
 
-  // Bank Copy State
   const [copiedBank, setCopiedBank] = useState<string | null>(null)
 
   const fetchData = async () => {
@@ -159,7 +152,6 @@ export default function OwnerSettingsPage() {
     fetchData()
   }, [])
 
-  // Auto clear alerts
   useEffect(() => {
     if (successMsg) {
       const timer = setTimeout(() => setSuccessMsg(""), 4000)
@@ -175,7 +167,6 @@ export default function OwnerSettingsPage() {
       ? instructorList
       : instructorList.filter((u) => u.branchId === selectedBranch)
 
-  // 1. Handle Reset Password
   const openResetPasswordModal = (user: UserAccount) => {
     setResetTargetUser(user)
     setNewPassword("password123")
@@ -212,7 +203,6 @@ export default function OwnerSettingsPage() {
     }
   }
 
-  // 2. Handle Edit User
   const openEditUserModal = (user: UserAccount) => {
     setEditingTargetUser(user)
     setEditForm({
@@ -258,7 +248,6 @@ export default function OwnerSettingsPage() {
     }
   }
 
-  // 3. Toggle Status Active / Inactive
   const handleToggleStatus = async (user: UserAccount) => {
     const actionName = user.isActive ? "menonaktifkan" : "mengaktifkan"
     if (!confirm(`Apakah Anda yakin ingin ${actionName} akun ${user.name}?`)) return
@@ -279,7 +268,6 @@ export default function OwnerSettingsPage() {
     }
   }
 
-  // 4. Handle Owner Profile & Security Update
   const handleOwnerProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!ownerData?.id) return
@@ -325,7 +313,6 @@ export default function OwnerSettingsPage() {
     }
   }
 
-  // 5. Handle Bank Account CRUD
   const openAddBankModal = () => {
     setEditingBankAccount(null)
     setBankForm({
@@ -415,7 +402,6 @@ export default function OwnerSettingsPage() {
     }
   }
 
-  // Copy Bank Helper
   const copyBank = (text: string, bank: string) => {
     navigator.clipboard.writeText(text)
     setCopiedBank(bank)
@@ -430,7 +416,7 @@ export default function OwnerSettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Pengaturan Sistem & Akun</h1>
@@ -440,7 +426,6 @@ export default function OwnerSettingsPage() {
         </div>
       </div>
 
-      {/* Global Alerts */}
       {successMsg && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs sm:text-sm text-emerald-900 font-bold flex items-center gap-2.5 shadow-2xs animate-fade-in">
           <CheckCircle2 size={18} className="text-[#386E1B] shrink-0" />
@@ -455,7 +440,6 @@ export default function OwnerSettingsPage() {
         </div>
       )}
 
-      {/* Main Tabs Navigation */}
       <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab("CS")}
@@ -510,7 +494,6 @@ export default function OwnerSettingsPage() {
         </button>
       </div>
 
-      {/* TAB 1: PENGATURAN CS */}
       {activeTab === "CS" && (
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
@@ -521,7 +504,6 @@ export default function OwnerSettingsPage() {
               </p>
             </div>
 
-            {/* Branch Filter */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
               <button
                 onClick={() => setSelectedBranch("ALL")}
@@ -658,7 +640,6 @@ export default function OwnerSettingsPage() {
         </div>
       )}
 
-      {/* TAB 2: PENGATURAN INSTRUKTUR */}
       {activeTab === "INSTRUCTOR" && (
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
@@ -669,7 +650,6 @@ export default function OwnerSettingsPage() {
               </p>
             </div>
 
-            {/* Branch Filter */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
               <button
                 onClick={() => setSelectedBranch("ALL")}
@@ -821,7 +801,6 @@ export default function OwnerSettingsPage() {
         </div>
       )}
 
-      {/* TAB 3: PROFIL & KEAMANAN OWNER */}
       {activeTab === "OWNER_PROFILE" && (
         <div className="max-w-2xl bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
           <div className="flex items-center gap-4 pb-5 border-b border-slate-100">
@@ -866,7 +845,6 @@ export default function OwnerSettingsPage() {
               placeholder="Alamat kantor pusat / domisili"
             />
 
-            {/* Change Password Section */}
             <div className="pt-4 border-t border-slate-100 space-y-3.5">
               <p className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                 <KeyRound size={14} className="text-[#3c7717]" />
@@ -901,10 +879,9 @@ export default function OwnerSettingsPage() {
         </div>
       )}
 
-      {/* TAB 4: REKENING RESMI & INFO SISTEM (DINAMIS DARI DATABASE) */}
       {activeTab === "SYSTEM" && (
         <div className="space-y-6">
-          {/* Card Pengelolaan Rekening Bank */}
+
           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
               <div>
@@ -930,7 +907,6 @@ export default function OwnerSettingsPage() {
               </Button>
             </div>
 
-            {/* Grid Rekening Bank Dinamis */}
             {bankAccounts.length === 0 ? (
               <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-400">
                 <CreditCard size={32} className="mx-auto text-slate-300 mb-2" />
@@ -977,7 +953,6 @@ export default function OwnerSettingsPage() {
                         </button>
                       </div>
 
-                      {/* Tombol Aksi Edit & Hapus */}
                       <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
                         <button
                           type="button"
@@ -1014,7 +989,6 @@ export default function OwnerSettingsPage() {
             )}
           </div>
 
-          {/* Info Sistem */}
           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
             <h3 className="font-bold text-base text-slate-900 pb-2 border-b border-slate-100">
               Ringkasan Infrastruktur Multi-Cabang
@@ -1041,7 +1015,6 @@ export default function OwnerSettingsPage() {
         </div>
       )}
 
-      {/* MODAL RESET PASSWORD AKUN */}
       <Modal
         isOpen={isResetPasswordOpen}
         onClose={() => setIsResetPasswordOpen(false)}
@@ -1085,7 +1058,6 @@ export default function OwnerSettingsPage() {
         </form>
       </Modal>
 
-      {/* MODAL EDIT DATA AKUN */}
       <Modal
         isOpen={isEditUserOpen}
         onClose={() => setIsEditUserOpen(false)}
@@ -1184,7 +1156,6 @@ export default function OwnerSettingsPage() {
         </form>
       </Modal>
 
-      {/* MODAL TAMBAH / EDIT REKENING BANK */}
       <Modal
         isOpen={isBankModalOpen}
         onClose={() => setIsBankModalOpen(false)}
@@ -1259,3 +1230,4 @@ export default function OwnerSettingsPage() {
     </div>
   )
 }
+

@@ -1,7 +1,6 @@
 import webpush from "web-push"
 import prisma from "@/lib/prisma"
 
-// Inisialisasi VAPID keys untuk Web Push ke perangkat
 const vapidPublicKey =
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
   "BMarwauV9nlSh4yO2Bx_4JgR4nV3DT8DqeR1KtOL_PUAax2HfSG0cjC5MAUQrfs4JuT6WV6KOqQHbLZAclsBt8A"
@@ -32,15 +31,12 @@ export interface SendNotificationPayload {
   icon?: string
 }
 
-/**
- * Kirim notifikasi ke satu pengguna (simpan di database + kirim Web Push ke semua perangkat terdaftar)
- */
 export async function sendNotificationToUser(
   userId: string,
   payload: SendNotificationPayload
 ) {
   try {
-    // 1. Simpan ke database
+
     const notification = await prisma.notification.create({
       data: {
         userId,
@@ -51,7 +47,6 @@ export async function sendNotificationToUser(
       },
     })
 
-    // 2. Ambil seluruh device subscriptions milik user ini
     const subscriptions = await prisma.pushSubscription.findMany({
       where: { userId },
     })
@@ -60,7 +55,6 @@ export async function sendNotificationToUser(
       return notification
     }
 
-    // 3. Kirim Web Push payload ke setiap perangkat
     const pushPayload = JSON.stringify({
       id: notification.id,
       title: payload.title,
@@ -87,7 +81,7 @@ export async function sendNotificationToUser(
             pushPayload
           )
         } catch (err: any) {
-          // Jika subscription sudah expired / uninstalled di perangkat (HTTP 410 atau 404)
+
           if (err.statusCode === 410 || err.statusCode === 404) {
             staleEndpoints.push(sub.endpoint)
           } else {
@@ -97,7 +91,6 @@ export async function sendNotificationToUser(
       })
     )
 
-    // 4. Bersihkan subscription yang sudah mati
     if (staleEndpoints.length > 0) {
       await prisma.pushSubscription.deleteMany({
         where: { endpoint: { in: staleEndpoints } },
@@ -111,12 +104,6 @@ export async function sendNotificationToUser(
   }
 }
 
-/**
- * Kirim notifikasi berdasarkan role & cabang:
- * - OWNER: ke semua Owner
- * - CUSTOMER_SERVICE: ke CS cabang tertentu (atau seluruh CS)
- * - INSTRUCTOR: ke Instruktur
- */
 export async function sendNotificationToRole(
   role: "OWNER" | "CUSTOMER_SERVICE" | "INSTRUCTOR" | "STUDENT",
   branchId: string | null | undefined,
@@ -141,3 +128,4 @@ export async function sendNotificationToRole(
     return []
   }
 }
+

@@ -99,7 +99,6 @@ export default function OwnerCoursesPage() {
   const getBranchCount = (branchId: string) =>
     courses.filter((c) => c.branchId === branchId).length
 
-  // Open modal for Create or Edit
   const openModal = (course?: Course) => {
     if (course) {
       setEditingCourse(course)
@@ -130,7 +129,6 @@ export default function OwnerCoursesPage() {
     setIsModalOpen(true)
   }
 
-  // Quick preset selector
   const applyPreset = (preset: {
     name: string
     courseType: string
@@ -314,7 +312,7 @@ export default function OwnerCoursesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -334,7 +332,6 @@ export default function OwnerCoursesPage() {
         </Button>
       </div>
 
-      {/* Global Alerts */}
       {successMsg && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs sm:text-sm text-emerald-900 font-bold flex items-center gap-2.5 shadow-2xs animate-fade-in">
           <CheckCircle2 size={18} className="text-[#386E1B] shrink-0" />
@@ -349,7 +346,6 @@ export default function OwnerCoursesPage() {
         </div>
       )}
 
-      {/* Pricing Reference Cards */}
       <div className="p-4 bg-white rounded-3xl border border-slate-200/80 shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -383,7 +379,6 @@ export default function OwnerCoursesPage() {
         </div>
       </div>
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -458,7 +453,6 @@ export default function OwnerCoursesPage() {
         )}
       />
 
-      {/* MODAL TAMBAH / EDIT PAKET KURSUS & HARGA */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -474,7 +468,6 @@ export default function OwnerCoursesPage() {
             </div>
           )}
 
-          {/* Quick Presets (Click to fill) */}
           <div className="p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200/80 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
@@ -714,3 +707,4 @@ export default function OwnerCoursesPage() {
     </div>
   )
 }
+

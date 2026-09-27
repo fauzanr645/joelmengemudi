@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     let instructorId = session.user.id
 
     if (userRole === "INSTRUCTOR") {
-      // Find the instructor's dedicated vehicle
+
       const instWithCar = await prisma.user.findUnique({
         where: { id: session.user.id },
         include: { assignedVehicle: true },
@@ -110,7 +110,6 @@ export async function POST(request: Request) {
       },
     })
 
-    // Kirim notifikasi ke CS Cabang dan Owner
     try {
       await sendNotificationToRole("CUSTOMER_SERVICE", targetVehicle.branchId, {
         title: "Kendala Mobil Dilaporkan 🛠️",
@@ -134,3 +133,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

@@ -27,7 +27,6 @@ export async function POST(
       return NextResponse.json({ error: "Jadwal tidak ditemukan" }, { status: 404 })
     }
 
-    // Permission check
     if (role === "STUDENT" && schedule.enrollment.studentId !== session.user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -56,7 +55,6 @@ export async function POST(
       },
     })
 
-    // Kirim notifikasi pengajuan ubah jadwal
     try {
       if (role === "STUDENT") {
         await sendNotificationToRole("CUSTOMER_SERVICE", schedule.branchId, {
@@ -163,7 +161,6 @@ export async function PATCH(
       const targetEndTime = body.requestedEndTime || schedule.requestedEndTime || schedule.endTime
       const targetInstructorId = instructorId || schedule.instructorId
 
-      // Vehicle is strictly the instructor's dedicated vehicle
       const targetInstructor = await prisma.user.findUnique({
         where: { id: targetInstructorId },
         include: { assignedVehicle: true },
@@ -179,7 +176,6 @@ export async function PATCH(
         return start1 < end2 && end1 > start2
       }
 
-      // Check Instructor Conflict
       if (targetInstructorId) {
         const instConflicts = await prisma.schedule.findMany({
           where: {
@@ -205,7 +201,6 @@ export async function PATCH(
         }
       }
 
-      // Check Vehicle Conflict
       if (targetVehicleId) {
         const vehConflicts = await prisma.schedule.findMany({
           where: {
@@ -269,3 +264,4 @@ export async function PATCH(
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

@@ -17,7 +17,6 @@ export async function GET(request: Request) {
     const userRole = (session.user as any).role
     const where: any = {}
 
-    // Role-based restrictions
     if (userRole === "CUSTOMER_SERVICE") {
       where.branchId = (session.user as any).branchId
     } else if (userRole === "INSTRUCTOR") {
@@ -87,7 +86,6 @@ export async function POST(request: Request) {
 
     const numericRating = Math.max(1, Math.min(5, Math.round(Number(rating))))
 
-    // Verify schedule belongs to this student and is completed
     const schedule = await prisma.schedule.findUnique({
       where: { id: scheduleId },
       include: {
@@ -108,9 +106,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check if rating already exists for this schedule
     if (schedule.rating) {
-      // Update existing rating
+
       const updated = await prisma.instructorRating.update({
         where: { id: schedule.rating.id },
         data: {
@@ -121,7 +118,6 @@ export async function POST(request: Request) {
       return NextResponse.json(updated)
     }
 
-    // Create new rating
     const newRating = await prisma.instructorRating.create({
       data: {
         rating: numericRating,
@@ -139,3 +135,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

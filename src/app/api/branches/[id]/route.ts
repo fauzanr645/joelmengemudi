@@ -75,3 +75,4 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

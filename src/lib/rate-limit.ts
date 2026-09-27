@@ -3,10 +3,8 @@ interface RateLimitRecord {
   resetTime: number
 }
 
-// In-memory store for rate limiting
 const store = new Map<string, RateLimitRecord>()
 
-// Periodic cleanup every 5 minutes to prevent memory leak
 if (typeof setInterval !== "undefined") {
   setInterval(() => {
     const now = Date.now()
@@ -25,12 +23,6 @@ export interface RateLimitResult {
   resetTime: number
 }
 
-/**
- * Memeriksa apakah request dari identifier (IP atau userId) masih dalam batas rate limit.
- * @param identifier Kunci unik (contoh: "login:192.168.1.1" atau "upload:user-id")
- * @param limit Batas maksimal request dalam jendela waktu
- * @param windowMs Durasi jendela waktu dalam milidetik (contoh: 60_000 untuk 1 menit)
- */
 export function checkRateLimit(
   identifier: string,
   limit: number = 60,
@@ -40,7 +32,7 @@ export function checkRateLimit(
   const record = store.get(identifier)
 
   if (!record || now > record.resetTime) {
-    // Buat jendela baru
+
     const resetTime = now + windowMs
     store.set(identifier, { count: 1, resetTime })
     return {
@@ -51,7 +43,6 @@ export function checkRateLimit(
     }
   }
 
-  // Jendela masih berjalan
   if (record.count >= limit) {
     return {
       allowed: false,
@@ -70,9 +61,6 @@ export function checkRateLimit(
   }
 }
 
-/**
- * Ekstrak IP klien dari header request Next.js
- */
 export function getClientIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for")
   if (forwarded) {
@@ -84,3 +72,4 @@ export function getClientIp(request: Request): string {
   }
   return "127.0.0.1"
 }
+

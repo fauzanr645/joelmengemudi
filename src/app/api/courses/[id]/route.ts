@@ -102,7 +102,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Paket kursus tidak ditemukan" }, { status: 404 })
     }
 
-    // If already has student enrollments, soft-delete by setting isActive = false
     if (course._count.enrollments > 0) {
       const updated = await prisma.course.update({
         where: { id },
@@ -114,7 +113,6 @@ export async function DELETE(
       })
     }
 
-    // If no enrollments, safe to delete
     await prisma.course.delete({
       where: { id },
     })
@@ -125,3 +123,4 @@ export async function DELETE(
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

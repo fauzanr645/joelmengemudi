@@ -40,7 +40,7 @@ export async function PUT(request: Request) {
     const body = await request.json()
 
     if (body.all) {
-      // Mark all as read for current user
+
       await prisma.notification.updateMany({
         where: { userId: session.user.id, isRead: false },
         data: { isRead: true },
@@ -49,7 +49,7 @@ export async function PUT(request: Request) {
     }
 
     if (body.id) {
-      // Mark single notification as read
+
       await prisma.notification.updateMany({
         where: { id: body.id, userId: session.user.id },
         data: { isRead: true },
@@ -95,3 +95,4 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

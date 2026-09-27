@@ -14,7 +14,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     const currentUserRole = (session.user as any).role
     const currentUserId = session.user.id
 
-    // IDOR Protection: Siswa hanya dapat melihat profil mereka sendiri
     if (currentUserRole === "STUDENT" && currentUserId !== id) {
       return NextResponse.json({ error: "Akses ditolak" }, { status: 403 })
     }
@@ -50,7 +49,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "User tidak ditemukan" }, { status: 404 })
     }
 
-    // CS hanya dapat mengakses profil pengguna di cabangnya
     if (currentUserRole === "CUSTOMER_SERVICE" && user.branchId !== (session.user as any).branchId) {
       return NextResponse.json({ error: "Akses ditolak: Pengguna di luar cabang Anda" }, { status: 403 })
     }
@@ -81,12 +79,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "User tidak ditemukan" }, { status: 404 })
     }
 
-    // IDOR Protection: Siswa & Instruktur hanya boleh mengedit profil mereka sendiri
     if ((currentUserRole === "STUDENT" || currentUserRole === "INSTRUCTOR") && currentUserId !== id) {
       return NextResponse.json({ error: "Akses ditolak: Anda tidak memiliki izin mengedit akun ini" }, { status: 403 })
     }
 
-    // CS Protection: CS hanya boleh mengedit siswa/instruktur di cabangnya dan tidak boleh mengedit akun Owner
     if (currentUserRole === "CUSTOMER_SERVICE") {
       if (targetUser.role === "OWNER" || targetUser.role === "CUSTOMER_SERVICE" && currentUserId !== id) {
         return NextResponse.json({ error: "Akses ditolak: CS tidak dapat mengubah akun ini" }, { status: 403 })
@@ -96,7 +92,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       }
     }
 
-    // Check unique email if email is being changed
     if (body.email && body.email !== targetUser.email) {
       const existingEmail = await prisma.user.findFirst({
         where: {
@@ -120,7 +115,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       address: body.address,
     }
 
-    // Role, Branch, Status, License hanya boleh diubah oleh CS/Owner yang berwenang
     if (currentUserRole === "OWNER") {
       if (body.role) updateData.role = body.role
       if (body.branchId !== undefined) updateData.branchId = body.branchId
@@ -140,7 +134,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       updateData.password = await hash(body.password, 12)
     }
 
-    // Remove undefined fields
     Object.keys(updateData).forEach((key) => {
       if (updateData[key] === undefined) delete updateData[key]
     })
@@ -169,3 +162,4 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

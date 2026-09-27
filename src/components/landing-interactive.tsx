@@ -28,26 +28,21 @@ interface LandingInteractiveProps {
 }
 
 export function LandingInteractive({ branches }: LandingInteractiveProps) {
-  // Course Package Tab
+
   const [activeTab, setActiveTab] = useState<"MANUAL" | "MATIC" | "COMBO" | "SIM">("MANUAL")
 
-  // Interactive Payment Mode: Total vs DP 50%
   const [paymentView, setPaymentView] = useState<"TOTAL" | "DP">("TOTAL")
 
-  // Interactive Recommendation State
   const [expLevel, setExpLevel] = useState<"ZERO" | "SOME" | "PRO">("ZERO")
   const [transType, setTransType] = useState<"MANUAL" | "MATIC" | "BOTH">("MANUAL")
   const [needSim, setNeedSim] = useState<"YES" | "NO">("NO")
 
-  // Interactive Selected Branch
   const [selectedBranchId, setSelectedBranchId] = useState<string>(branches[0]?.id || "")
 
-  // FAQ Accordion State
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
 
   const defaultPhone = branches[0]?.phone || "081234567801"
 
-  // 10 Paket Resmi joelmengemudi
   const packages: CoursePackage[] = [
     {
       name: "Paket Manual 4 Jam",
@@ -139,7 +134,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
     },
   ]
 
-  // Filter packages based on active tab
   const filteredPackages = packages.filter((pkg) => {
     if (activeTab === "MANUAL") return pkg.courseType === "MANUAL" && !pkg.includesSim
     if (activeTab === "MATIC") return pkg.courseType === "AUTOMATIC" && !pkg.includesSim
@@ -148,7 +142,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
     return true
   })
 
-  // Dynamic recommendation calculation based on user answers
   const recommendedResult = useMemo(() => {
     if (expLevel === "PRO") {
       return {
@@ -196,7 +189,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
       }
     }
 
-    // Kursus saja (Tanpa SIM)
     if (expLevel === "SOME") {
       if (transType === "MATIC") {
         return {
@@ -220,7 +212,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
       }
     }
 
-    // Pemula Nol
     if (transType === "BOTH") {
       return {
         title: "Paket Mix (Manual + Matic)",
@@ -254,7 +245,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
     }
   }, [expLevel, transType, needSim])
 
-  // Active branch object
   const activeBranch = branches.find((b) => b.id === selectedBranchId) || branches[0]
 
   const faqs = [
@@ -286,9 +276,7 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
 
   return (
     <>
-      {/* ========================================================= */}
-      {/* 1. INTERACTIVE COURSE RECOMMENDER / ESTIMATOR */}
-      {/* ========================================================= */}
+
       <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10">
@@ -305,9 +293,9 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
 
           <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-5 sm:p-7 shadow-xs">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-              {/* Left Form: 3 Interactive Questions */}
+
               <div className="lg:col-span-7 space-y-5">
-                {/* Q1: Tingkat Pengalaman */}
+
                 <div>
                   <label className="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-2">
                     1. Pengalaman Menyetir Anda
@@ -340,7 +328,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
                   </div>
                 </div>
 
-                {/* Q2: Jenis Transmisi (Hidden if PRO / SIM Only) */}
                 {expLevel !== "PRO" && (
                   <div>
                     <label className="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-2">
@@ -375,7 +362,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
                   </div>
                 )}
 
-                {/* Q3: Butuh SIM A (Hidden if PRO) */}
                 {expLevel !== "PRO" && (
                   <div>
                     <label className="block text-xs font-bold text-slate-800 uppercase tracking-wide mb-2">
@@ -410,7 +396,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
                 )}
               </div>
 
-              {/* Right Output: Recommended Card Box with #7ADA3A identity */}
               <div className="lg:col-span-5 bg-white rounded-xl border-2 border-[#7ADA3A] p-5 shadow-sm space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
@@ -476,9 +461,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 2. PILIHAN PAKET LENGKAP & INTERACTIVE DP TOGGLE */}
-      {/* ========================================================= */}
       <section id="paket-kursus" className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200 scroll-mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
@@ -494,7 +476,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
               </p>
             </div>
 
-            {/* Interactive Payment Display Toggle */}
             <div className="inline-flex items-center p-1 bg-white rounded-xl border border-slate-200 self-start md:self-auto">
               <button
                 type="button"
@@ -523,7 +504,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
             </div>
           </div>
 
-          {/* Filter Tabs with #7ADA3A styling */}
           <div className="flex flex-wrap gap-2 mb-6">
             {[
               { id: "MANUAL", label: "Mobil Manual" },
@@ -546,7 +526,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
             ))}
           </div>
 
-          {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {filteredPackages.map((pkg) => {
               const waUrl = getWhatsAppLink(
@@ -647,9 +626,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 3. INTERACTIVE 5 CABANG BALI */}
-      {/* ========================================================= */}
       <section id="cabang-bali" className="py-12 sm:py-16 bg-white border-b border-slate-200 scroll-mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-xl mb-8">
@@ -664,7 +640,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
             </p>
           </div>
 
-          {/* Interactive Branch Switcher Tabs */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-6">
             {branches.map((b, idx) => (
               <button
@@ -691,7 +666,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
             ))}
           </div>
 
-          {/* Active Branch Detail Card */}
           {activeBranch && (
             <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
               <div className="space-y-2 max-w-xl">
@@ -731,9 +705,6 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 4. FAQ ACCORDION */}
-      {/* ========================================================= */}
       <section id="faq" className="py-12 sm:py-16 bg-slate-50 scroll-mt-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10">
@@ -782,3 +753,4 @@ export function LandingInteractive({ branches }: LandingInteractiveProps) {
     </>
   )
 }
+

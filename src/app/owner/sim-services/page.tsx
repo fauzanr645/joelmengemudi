@@ -74,7 +74,7 @@ export default function OwnerSimServicesPage() {
   const fetchData = async () => {
     try {
       const [appRes, branchRes] = await Promise.all([
-        fetch("/api/sim-services"), // Owner gets all branches
+        fetch("/api/sim-services"), 
         fetch("/api/branches"),
       ])
       const appData = await appRes.json()
@@ -106,7 +106,6 @@ export default function OwnerSimServicesPage() {
   const getBranchCount = (branchId: string) =>
     applications.filter((a) => a.branch.id === branchId).length
 
-  // Stats calculation
   const totalSimA = filteredApps.filter((a) => a.simType === "SIM_A").length
   const totalSimC = filteredApps.filter((a) => a.simType === "SIM_C").length
   const totalScheduled = filteredApps.filter((a) => a.status === "SCHEDULED_SATPAS").length
@@ -274,7 +273,7 @@ export default function OwnerSimServicesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -286,7 +285,6 @@ export default function OwnerSimServicesPage() {
         </div>
       </div>
 
-      {/* Summary Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="p-4 bg-white rounded-3xl border border-slate-200 shadow-xs space-y-1">
           <span className="text-[11px] font-bold text-slate-400 uppercase">Total Pemohon</span>
@@ -321,7 +319,6 @@ export default function OwnerSimServicesPage() {
         </div>
       )}
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -371,7 +368,6 @@ export default function OwnerSimServicesPage() {
         emptyMessage="Tidak ada pengajuan SIM pada cabang ini."
       />
 
-      {/* MODAL PROSES SIM OWNER */}
       <Modal
         isOpen={isProcessModalOpen}
         onClose={() => setIsProcessModalOpen(false)}
@@ -446,3 +442,4 @@ export default function OwnerSimServicesPage() {
     </div>
   )
 }
+

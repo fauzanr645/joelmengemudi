@@ -277,7 +277,7 @@ export default function CSVehicleReportsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -289,7 +289,6 @@ export default function CSVehicleReportsPage() {
         </div>
       </div>
 
-      {/* Alert Notification if any new reported */}
       {pendingReports.length > 0 && (
         <div className="p-4 bg-amber-50 border border-amber-200 rounded-3xl flex items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-3">
@@ -323,7 +322,6 @@ export default function CSVehicleReportsPage() {
         </div>
       )}
 
-      {/* Filter Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveFilter("ALL")}
@@ -382,7 +380,6 @@ export default function CSVehicleReportsPage() {
         emptyMessage="Tidak ada laporan kendala mobil pada kategori ini."
       />
 
-      {/* MODAL PROSES & PENGAJUAN PERBAIKAN MOBIL */}
       <Modal
         isOpen={isProcessModalOpen}
         onClose={() => setIsProcessModalOpen(false)}
@@ -460,3 +457,4 @@ export default function CSVehicleReportsPage() {
     </div>
   )
 }
+

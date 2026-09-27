@@ -88,7 +88,6 @@ export default function StudentCoursesPage() {
                   </div>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-slate-700">Progres Latihan:</span>
@@ -122,3 +121,4 @@ export default function StudentCoursesPage() {
     </div>
   )
 }
+

@@ -17,7 +17,7 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
   const [installed, setInstalled] = useState(false)
 
   useEffect(() => {
-    // 1. Register Service Worker
+
     if (typeof window !== "undefined" && "serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker
@@ -31,22 +31,18 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
       })
     }
 
-    // 2. Check if already installed / standalone
     const isStandaloneMode =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as any).standalone === true
 
     setIsStandalone(isStandaloneMode)
 
-    // 3. Detect iOS
     const userAgent = window.navigator.userAgent.toLowerCase()
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent)
     setIsIOS(isIosDevice)
 
-    // Check localStorage dismissal
     const dismissed = localStorage.getItem("pwa-prompt-dismissed")
 
-    // 4. Capture beforeinstallprompt event (Android Chrome, Edge, etc.)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
@@ -57,7 +53,6 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
 
-    // 5. Detect appinstalled event
     const handleAppInstalled = () => {
       setInstalled(true)
       setShowPrompt(false)
@@ -67,7 +62,6 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("appinstalled", handleAppInstalled)
 
-    // 6. Handle ChunkLoadError when a new version is deployed to Vercel
     const handleChunkError = (e: ErrorEvent | PromiseRejectionEvent) => {
       const message =
         ("message" in e ? e.message : "") ||
@@ -82,7 +76,7 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
         console.warn("Detected chunk load error after deployment, refreshing to load latest version...", message)
         const lastReload = sessionStorage.getItem("chunk-error-reload")
         const now = Date.now()
-        // Prevent infinite reload loops: reload at most once every 10 seconds
+
         if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
           sessionStorage.setItem("chunk-error-reload", now.toString())
           window.location.reload()
@@ -93,7 +87,6 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener("error", handleChunkError)
     window.addEventListener("unhandledrejection", handleChunkError)
 
-    // Show prompt on iOS if not dismissed and not standalone
     if (isIosDevice && !isStandaloneMode && !dismissed) {
       const timer = setTimeout(() => setShowPrompt(true), 3000)
       return () => clearTimeout(timer)
@@ -129,7 +122,6 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
     <>
       {children}
 
-      {/* Floating PWA Install Prompt for Mobile Devices */}
       {showPrompt && !isStandalone && (
         <div className="fixed bottom-20 lg:bottom-5 left-3 right-3 sm:left-auto sm:right-5 sm:max-w-sm z-50 animate-fade-in">
           <div className="bg-slate-900 text-white rounded-2xl p-4 shadow-2xl border border-slate-800 relative overflow-hidden">
@@ -188,7 +180,6 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Installed Toast Confirmation */}
       {installed && (
         <div className="fixed bottom-24 lg:bottom-6 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-fade-in">
           <CheckCircle2 size={16} />
@@ -198,3 +189,4 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
     </>
   )
 }
+

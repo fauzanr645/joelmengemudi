@@ -93,3 +93,4 @@ export const lessonTypeLabels: Record<string, string> = {
   PRACTICE: "Praktik",
   EXAM: "Ujian",
 }
+

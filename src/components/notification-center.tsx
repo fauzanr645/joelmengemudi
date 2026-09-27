@@ -53,7 +53,6 @@ export function NotificationCenter() {
     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
     "BMarwauV9nlSh4yO2Bx_4JgR4nV3DT8DqeR1KtOL_PUAax2HfSG0cjC5MAUQrfs4JuT6WV6KOqQHbLZAclsBt8A"
 
-  // Fetch notifications
   const fetchNotifications = async () => {
     try {
       const res = await fetch("/api/notifications")
@@ -78,7 +77,6 @@ export function NotificationCenter() {
     return () => clearInterval(interval)
   }, [])
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -94,7 +92,6 @@ export function NotificationCenter() {
     }
   }, [isOpen])
 
-  // Clear toast alert
   useEffect(() => {
     if (alertMsg) {
       const timer = setTimeout(() => setAlertMsg(null), 4000)
@@ -102,7 +99,6 @@ export function NotificationCenter() {
     }
   }, [alertMsg])
 
-  // Request Push Permission & Register Service Worker Subscription
   const enableDevicePush = async () => {
     if (typeof window === "undefined" || !("Notification" in window)) {
       setAlertMsg({ text: "Browser ini belum mendukung notifikasi Web Push.", type: "error" })
@@ -122,7 +118,6 @@ export function NotificationCenter() {
         return
       }
 
-      // Check service worker registration
       if (!("serviceWorker" in navigator)) {
         throw new Error("Service Worker tidak tersedia di browser ini.")
       }
@@ -141,7 +136,6 @@ export function NotificationCenter() {
 
       const subJson = subscription.toJSON()
 
-      // Kirim data subscription ke server
       const res = await fetch("/api/notifications/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,7 +162,6 @@ export function NotificationCenter() {
     }
   }
 
-  // Send Test Notification
   const triggerTestNotification = async () => {
     setIsTesting(true)
     try {
@@ -187,7 +180,6 @@ export function NotificationCenter() {
     }
   }
 
-  // Mark all as read
   const markAllAsRead = async () => {
     try {
       await fetch("/api/notifications", {
@@ -202,7 +194,6 @@ export function NotificationCenter() {
     }
   }
 
-  // Mark single as read and navigate
   const handleItemClick = async (notif: NotificationItem) => {
     if (!notif.isRead) {
       try {
@@ -226,7 +217,6 @@ export function NotificationCenter() {
     }
   }
 
-  // Filtered notifications
   const displayedNotifications = notifications.filter((n) =>
     activeTab === "UNREAD" ? !n.isRead : true
   )
@@ -243,7 +233,7 @@ export function NotificationCenter() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Bell Button */}
+
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -258,10 +248,9 @@ export function NotificationCenter() {
         )}
       </button>
 
-      {/* Dropdown Panel */}
       {isOpen && (
         <div className="fixed sm:absolute top-14 sm:top-12 right-2 sm:right-0 w-[calc(100vw-16px)] sm:w-96 max-w-[420px] bg-white rounded-3xl border-2 border-slate-200 shadow-2xl z-50 overflow-hidden flex flex-col max-h-[82vh] animate-fade-in">
-          {/* Header */}
+
           <div className="p-4 border-b border-slate-100 bg-slate-50/80 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-sm text-slate-900">Pemberitahuan</span>
@@ -293,7 +282,6 @@ export function NotificationCenter() {
             </div>
           </div>
 
-          {/* Toast Alert */}
           {alertMsg && (
             <div
               className={cn(
@@ -310,7 +298,6 @@ export function NotificationCenter() {
             </div>
           )}
 
-          {/* Device Push Permission Box */}
           <div className="p-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white border-b border-slate-700/60 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-8 h-8 rounded-lg bg-[#7ADA3A]/20 text-[#7ADA3A] flex items-center justify-center shrink-0">
@@ -355,7 +342,6 @@ export function NotificationCenter() {
             </div>
           </div>
 
-          {/* Filter Tabs */}
           <div className="px-3 pt-2.5 pb-1 flex items-center gap-2 border-b border-slate-100 bg-white">
             <button
               type="button"
@@ -383,7 +369,6 @@ export function NotificationCenter() {
             </button>
           </div>
 
-          {/* Notifications List */}
           <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
             {displayedNotifications.length === 0 ? (
               <div className="p-8 text-center text-slate-400 space-y-1">
@@ -445,3 +430,4 @@ export function NotificationCenter() {
     </div>
   )
 }
+

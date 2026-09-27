@@ -219,7 +219,6 @@ export default function InstructorVehicleReportsPage() {
         </div>
       )}
 
-      {/* Info Mobil Dinas Khusus Instruktur */}
       {myVehicle && (
         <div className="p-4 bg-white rounded-3xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3.5">
@@ -253,7 +252,6 @@ export default function InstructorVehicleReportsPage() {
         emptyMessage="Belum ada laporan kendala mobil yang Anda ajukan. Mobil Anda dalam kondisi prima!"
       />
 
-      {/* MODAL LAPOR KENDALA MOBIL */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -322,3 +320,4 @@ export default function InstructorVehicleReportsPage() {
     </div>
   )
 }
+

@@ -79,7 +79,7 @@ export default function OwnerVehicleReportsPage() {
   const fetchData = async () => {
     try {
       const [reportsRes, branchRes] = await Promise.all([
-        fetch("/api/vehicle-reports"), // Owner gets all branches
+        fetch("/api/vehicle-reports"), 
         fetch("/api/branches"),
       ])
       const repData = await reportsRes.json()
@@ -302,7 +302,7 @@ export default function OwnerVehicleReportsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -314,7 +314,6 @@ export default function OwnerVehicleReportsPage() {
         </div>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <div className="p-4 bg-white rounded-3xl border border-slate-200/80 shadow-xs">
           <span className="text-slate-400 block text-xs font-semibold uppercase">Total Laporan</span>
@@ -341,7 +340,6 @@ export default function OwnerVehicleReportsPage() {
         </div>
       )}
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -391,7 +389,6 @@ export default function OwnerVehicleReportsPage() {
         emptyMessage="Tidak ada laporan kendala mobil pada cabang ini."
       />
 
-      {/* MODAL APPROVE PERBAIKAN & ANGGARAN OWNER */}
       <Modal
         isOpen={isProcessModalOpen}
         onClose={() => setIsProcessModalOpen(false)}
@@ -468,3 +465,4 @@ export default function OwnerVehicleReportsPage() {
     </div>
   )
 }
+

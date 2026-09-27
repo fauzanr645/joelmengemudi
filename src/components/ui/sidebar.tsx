@@ -41,11 +41,11 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
     setIsLoggingOut(true)
 
     try {
-      // Panggil signOut bawaan NextAuth.js yang otomatis menangani CSRF token & session broadcast
+
       await signOut({ callbackUrl: "/login", redirect: false })
     } catch (err) {
       console.warn("NextAuth signOut warning:", err)
-      // Fallback manual request jika diperlukan
+
       try {
         const csrfRes = await fetch("/api/auth/csrf")
         const csrfData = await csrfRes.json()
@@ -59,7 +59,7 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
         console.warn("Fallback signout error:", fallbackErr)
       }
     } finally {
-      // Full hard reload ke /login untuk mereset seluruh cache, chunks lama, dan session cookies
+
       window.location.href = "/login"
     }
   }
@@ -106,7 +106,7 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile Top App Bar */}
+
       <div className="fixed top-0 left-0 right-0 z-40 lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-2.5">
           <button
@@ -140,7 +140,6 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
         </div>
       </div>
 
-      {/* Overlay Backdrop */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 lg:hidden transition-opacity"
@@ -148,14 +147,13 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
         />
       )}
 
-      {/* Sidebar Desktop & Mobile Drawer */}
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-slate-200/80 transition-transform duration-250 ease-out flex flex-col shadow-xs lg:shadow-none",
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
-        {/* Brand Header */}
+
         <div className="p-4 border-b border-slate-100 bg-gradient-to-b from-[#7ADA3A]/10 via-[#7ADA3A]/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
@@ -179,7 +177,6 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
           </div>
         </div>
 
-        {/* User Card */}
         <div className="p-4 border-b border-slate-100/80">
           <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-200/60 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-bold text-sm text-[#254d0d] shadow-xs shrink-0">
@@ -203,7 +200,6 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
           </div>
         </div>
 
-        {/* Navigation Menu */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
           <div className="px-3 pt-2 pb-1.5">
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -293,7 +289,6 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
           })}
         </nav>
 
-        {/* Footer with Logout */}
         <div className="p-3 border-t border-slate-100 bg-slate-50/40">
           <form onSubmit={handleSignOut}>
             <button
@@ -308,7 +303,6 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
         </div>
       </aside>
 
-      {/* Mobile Bottom Navigation Bar (For Student & Instructor) */}
       {(role === "STUDENT" || role === "INSTRUCTOR") && (
         <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-lg">
           {items.map((item) => {
@@ -350,3 +344,4 @@ export function Sidebar({ items, role, userName, branchName }: SidebarProps) {
     </>
   )
 }
+

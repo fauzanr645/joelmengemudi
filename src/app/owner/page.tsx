@@ -63,7 +63,7 @@ export default async function OwnerDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
+
       <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 text-white overflow-hidden shadow-xl border border-slate-700/50">
         <div className="absolute right-0 top-0 -mt-8 -mr-8 w-72 h-72 bg-[#7ADA3A]/15 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -91,7 +91,6 @@ export default async function OwnerDashboard() {
         </div>
       </div>
 
-      {/* Row 1 Stats: Core Assets */}
       <div>
         <div className="flex items-center justify-between mb-3 px-1">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -135,7 +134,6 @@ export default async function OwnerDashboard() {
         </div>
       </div>
 
-      {/* Row 2 Stats: Operational & Financial */}
       <div>
         <div className="flex items-center justify-between mb-3 px-1">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -179,7 +177,6 @@ export default async function OwnerDashboard() {
         </div>
       </div>
 
-      {/* Recent Enrollments Table Card */}
       <div className="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm">
         <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/40">
           <div>
@@ -255,3 +252,4 @@ export default async function OwnerDashboard() {
     </div>
   )
 }
+

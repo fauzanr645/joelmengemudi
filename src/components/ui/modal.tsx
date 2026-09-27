@@ -54,14 +54,13 @@ export function Modal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      {/* Backdrop */}
+
       <div
         className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Dialog */}
       <div
         className={cn(
           "relative bg-white rounded-2xl shadow-2xl border border-slate-200/80 w-full overflow-hidden z-10 my-auto transform transition-all animate-fade-in",
@@ -71,9 +70,9 @@ export function Modal({
         role="dialog"
         aria-modal="true"
       >
-        {/* Header with accent top bar */}
+
         <div className="h-1.5 bg-gradient-to-r from-[#7ADA3A] via-[#8ce35a] to-[#5cb82a]" />
-        
+
         <div className="flex items-start justify-between p-5 border-b border-slate-100 bg-slate-50/50">
           <div>
             <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
@@ -92,9 +91,9 @@ export function Modal({
           </button>
         </div>
 
-        {/* Content Body */}
         <div className="p-5 max-h-[75vh] overflow-y-auto">{children}</div>
       </div>
     </div>
   )
 }
+

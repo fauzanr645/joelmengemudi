@@ -54,7 +54,6 @@ export default function CSSimServicesPage() {
   const [activeFilter, setActiveFilter] = useState<string>("ALL")
   const [branchInfo, setBranchInfo] = useState<{ name: string; city: string } | null>(null)
 
-  // Modals
   const [selectedApp, setSelectedApp] = useState<SimApplication | null>(null)
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false)
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
@@ -76,7 +75,7 @@ export default function CSSimServicesPage() {
   const fetchData = async () => {
     try {
       const [appRes, sessRes] = await Promise.all([
-        fetch("/api/sim-services"), // strictly CS branch
+        fetch("/api/sim-services"), 
         fetch("/api/auth/session"),
       ])
       const appData = await appRes.json()
@@ -317,7 +316,7 @@ export default function CSSimServicesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -336,7 +335,6 @@ export default function CSSimServicesPage() {
         </div>
       </div>
 
-      {/* Global Alerts */}
       {successMsg && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs sm:text-sm text-emerald-900 font-bold flex items-center gap-2.5 shadow-2xs animate-fade-in">
           <CheckCircle2 size={18} className="text-[#386E1B] shrink-0" />
@@ -351,7 +349,6 @@ export default function CSSimServicesPage() {
         </div>
       )}
 
-      {/* Filter Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveFilter("ALL")}
@@ -410,7 +407,6 @@ export default function CSSimServicesPage() {
         emptyMessage="Tidak ada pengajuan SIM pada kategori ini."
       />
 
-      {/* MODAL PROSES PENGAJUAN & ATUR JADWAL SATPAS */}
       <Modal
         isOpen={isProcessModalOpen}
         onClose={() => setIsProcessModalOpen(false)}
@@ -492,7 +488,6 @@ export default function CSSimServicesPage() {
         </form>
       </Modal>
 
-      {/* MODAL TOLAK PENGAJUAN */}
       <Modal
         isOpen={isRejectModalOpen}
         onClose={() => setIsRejectModalOpen(false)}
@@ -520,7 +515,6 @@ export default function CSSimServicesPage() {
         </div>
       </Modal>
 
-      {/* MODAL PRATINJAU STRUK TRANSFER */}
       <Modal
         isOpen={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}
@@ -547,3 +541,4 @@ export default function CSSimServicesPage() {
     </div>
   )
 }
+

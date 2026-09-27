@@ -58,7 +58,6 @@ export async function PUT(
 
     const updateData: any = {}
 
-    // Student updates: can upload payment proof or change contact
     if (userRole === "STUDENT") {
       if (existing.studentId !== session.user.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
@@ -79,7 +78,6 @@ export async function PUT(
       if (body.medicalDoc !== undefined) updateData.medicalDoc = body.medicalDoc
     }
 
-    // CS & Owner updates: can verify, schedule satpas, confirm payment, complete, or reject
     if (userRole === "CUSTOMER_SERVICE" || userRole === "OWNER") {
       if (body.status !== undefined) updateData.status = body.status
       if (body.paymentStatus !== undefined) updateData.paymentStatus = body.paymentStatus
@@ -103,10 +101,9 @@ export async function PUT(
       },
     })
 
-    // Kirim notifikasi penting ke perangkat
     try {
       if (userRole === "STUDENT" && body.transferProof) {
-        // Notif ke CS Cabang bahwa siswa mengirim bukti transfer
+
         await sendNotificationToRole("CUSTOMER_SERVICE", existing.branchId, {
           title: "Bukti Transfer Layanan SIM Masuk 💳",
           message: `Siswa ${updated.fullName} mengirimkan bukti pembayaran untuk layanan ${updated.simType === "SIM_A" ? "SIM A" : "SIM C"}.`,
@@ -183,3 +180,4 @@ export async function DELETE(
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

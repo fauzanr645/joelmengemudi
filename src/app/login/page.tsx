@@ -115,12 +115,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-[#f4fcee]/40 to-slate-100 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
-      {/* Background Decorative Circles */}
+
       <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#7ADA3A]/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#5cb82a]/15 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        {/* Brand Header */}
+
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center mb-2">
             <img
@@ -137,7 +137,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Main Card */}
         <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-slate-200/80 p-6 sm:p-8">
           <div className="mb-5 pb-4 border-b border-slate-100">
             <h2 className="text-lg font-bold text-slate-900">Masuk ke Akun</h2>
@@ -211,7 +210,6 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Quick Demo 1-Click Selector */}
           <div className="mt-6 pt-5 border-t border-slate-100">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -251,7 +249,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Footer info */}
         <div className="mt-6 text-center text-xs text-slate-400 flex items-center justify-center gap-1.5 font-medium">
           <ShieldCheck size={14} className="text-[#3c7717]" />
           <span>joelmengemudi v1.0 • Aman, Terpercaya, & Berstandar Nasional</span>
@@ -260,3 +257,4 @@ export default function LoginPage() {
     </div>
   )
 }
+

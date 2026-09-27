@@ -43,14 +43,13 @@ export async function PUT(
       },
     })
 
-    // If resolved, ensure vehicle is active
     if (status === "RESOLVED" && updated.vehicleId) {
       await prisma.vehicle.update({
         where: { id: updated.vehicleId },
         data: { isActive: true },
       })
     } else if ((status === "IN_REPAIR" || status === "APPROVED") && updated.vehicleId) {
-      // While in repair, can mark as temporarily inactive if critical
+
       if (updated.severity === "HIGH" || updated.severity === "EMERGENCY") {
         await prisma.vehicle.update({
           where: { id: updated.vehicleId },
@@ -59,7 +58,6 @@ export async function PUT(
       }
     }
 
-    // Kirim notifikasi ke Instruktur yang melaporkan dan ke Owner jika status berubah
     try {
       const statusLabelsText: Record<string, string> = {
         PENDING_APPROVAL: "Diajukan ke Owner untuk Persetujuan Anggaran",
@@ -123,3 +121,4 @@ export async function DELETE(
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

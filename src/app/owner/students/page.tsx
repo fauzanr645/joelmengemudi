@@ -256,7 +256,6 @@ export default function StudentsPage() {
         </Button>
       </div>
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -324,7 +323,6 @@ export default function StudentsPage() {
         )}
       />
 
-      {/* Modal Add / Edit Student */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -406,7 +404,6 @@ export default function StudentsPage() {
         </form>
       </Modal>
 
-      {/* Modal Detail Siswa & Seluruh Jadwal */}
       <Modal
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
@@ -416,7 +413,7 @@ export default function StudentsPage() {
       >
         {selectedStudent && (
           <div className="space-y-5">
-            {/* Header Profile */}
+
             <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-[#7ADA3A]/10 to-transparent border border-[#7ADA3A]/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-[#7ADA3A] text-slate-900 flex items-center justify-center font-bold text-base shadow-sm shrink-0">
@@ -444,7 +441,6 @@ export default function StudentsPage() {
               )}
             </div>
 
-            {/* Kursus Yang Diikuti */}
             {selectedStudent.enrollments && selectedStudent.enrollments.length > 0 && (
               <div>
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
@@ -468,7 +464,6 @@ export default function StudentsPage() {
               </div>
             )}
 
-            {/* List Jadwal Sesi */}
             <div>
               <div className="flex items-center justify-between mb-2.5">
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -537,3 +532,4 @@ export default function StudentsPage() {
     </div>
   )
 }
+

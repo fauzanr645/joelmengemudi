@@ -50,7 +50,6 @@ export default function StudentSchedulesPage() {
     reason: "",
   })
 
-  // Rating Modal State
   const [ratingTargetSchedule, setRatingTargetSchedule] = useState<Schedule | null>(null)
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
   const [selectedStars, setSelectedStars] = useState<number>(5)
@@ -273,7 +272,6 @@ export default function StudentSchedulesPage() {
 
       <DataTable columns={columns} data={schedules} searchable searchPlaceholder="Cari jadwal atau nama instruktur..." />
 
-      {/* Modal Rating & Review Instruktur */}
       <Modal
         isOpen={isRatingModalOpen}
         onClose={() => setIsRatingModalOpen(false)}
@@ -288,7 +286,6 @@ export default function StudentSchedulesPage() {
             <p><span className="text-slate-400">Instruktur:</span> <strong className="text-[#254d0d]">{ratingTargetSchedule?.instructor.name}</strong></p>
           </div>
 
-          {/* Star Selection 1 - 5 */}
           <div className="text-center space-y-2 py-2">
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               Kepuasan Pelatihan
@@ -317,7 +314,6 @@ export default function StudentSchedulesPage() {
             </p>
           </div>
 
-          {/* Review / Comment Textarea */}
           <div className="space-y-1.5">
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               Ulasan / Komentar Anda
@@ -343,7 +339,6 @@ export default function StudentSchedulesPage() {
         </form>
       </Modal>
 
-      {/* Modal Reschedule Request */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -398,3 +393,4 @@ export default function StudentSchedulesPage() {
     </div>
   )
 }
+

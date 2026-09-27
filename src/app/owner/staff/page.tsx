@@ -177,7 +177,6 @@ export default function StaffPage() {
         </Button>
       </div>
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -236,7 +235,6 @@ export default function StaffPage() {
         )}
       />
 
-      {/* Modal Add / Edit CS */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -320,3 +318,4 @@ export default function StaffPage() {
     </div>
   )
 }
+

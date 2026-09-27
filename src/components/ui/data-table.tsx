@@ -95,7 +95,6 @@ export function DataTable<T extends Record<string, any>>({
         </div>
       )}
 
-      {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -154,7 +153,6 @@ export function DataTable<T extends Record<string, any>>({
         </table>
       </div>
 
-      {/* Mobile Card List View */}
       <div className="block md:hidden divide-y divide-slate-100">
         {paginatedData.length === 0 ? (
           <div className="p-8 text-center text-sm text-slate-400">
@@ -189,7 +187,6 @@ export function DataTable<T extends Record<string, any>>({
         )}
       </div>
 
-      {/* Pagination Footer */}
       {totalPages > 1 && (
         <div className="px-4 py-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/40">
           <p className="text-xs text-slate-500 text-center sm:text-left font-medium">
@@ -233,3 +230,4 @@ export function DataTable<T extends Record<string, any>>({
     </div>
   )
 }
+

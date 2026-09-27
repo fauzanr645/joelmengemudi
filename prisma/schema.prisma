@@ -102,32 +102,25 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Relations
   branchId      String?
   branch        Branch?   @relation(fields: [branchId], references: [id])
 
-  // Instructor-specific
   licenseNumber String?
   specialization CourseType?
   instructorSchedules Schedule[] @relation("InstructorSchedules")
   assignedVehicle Vehicle? @relation("InstructorVehicle")
 
-  // Student-specific
   enrollments   Enrollment[]
   payments      Payment[]
   attendances   Attendance[]
 
-  // Ratings
   givenRatings      InstructorRating[] @relation("StudentRatings")
   receivedRatings   InstructorRating[] @relation("InstructorRatings")
 
-  // Vehicle reports by instructor
   vehicleReports    VehicleReport[] @relation("InstructorVehicleReports")
 
-  // SIM Applications by student
   simApplications   SimApplication[] @relation("StudentSimApplications")
 
-  // Notifications & Device Push Subscriptions
   notifications     Notification[]     @relation("UserNotifications")
   pushSubscriptions PushSubscription[] @relation("UserPushSubscriptions")
 
@@ -147,7 +140,6 @@ model Branch {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
   users       User[]
   courses     Course[]
   vehicles    Vehicle[]
@@ -165,14 +157,13 @@ model Course {
   name        String
   description String?
   courseType  CourseType
-  duration    Int        // Total hours
-  sessions    Int        // Number of sessions
+  duration    Int
+  sessions    Int
   price       Float
   isActive    Boolean    @default(true)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  // Relations
   branchId    String
   branch      Branch     @relation(fields: [branchId], references: [id])
   enrollments Enrollment[]
@@ -187,12 +178,11 @@ model Vehicle {
   brand         String
   model         String
   year          Int
-  transmission  CourseType // MANUAL or AUTOMATIC
+  transmission  CourseType
   isActive      Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Relations
   branchId      String
   branch        Branch    @relation(fields: [branchId], references: [id])
   schedules     Schedule[]
@@ -212,7 +202,6 @@ model Enrollment {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  // Relations
   studentId   String
   student     User         @relation(fields: [studentId], references: [id])
   courseId     String
@@ -231,15 +220,14 @@ model Enrollment {
 model Schedule {
   id          String         @id @default(cuid())
   date        DateTime
-  startTime   String         // HH:mm format
-  endTime     String         // HH:mm format
+  startTime   String
+  endTime     String
   lessonType  LessonType
   status      ScheduleStatus @default(SCHEDULED)
   notes       String?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
-  // Reschedule Fields
   rescheduleStatus          RescheduleStatus @default(NONE)
   rescheduleRequestedBy     Role?
   requestedDate             DateTime?
@@ -248,7 +236,6 @@ model Schedule {
   rescheduleReason          String?
   rescheduleRejectionReason String?
 
-  // Relations
   enrollmentId String
   enrollment   Enrollment    @relation(fields: [enrollmentId], references: [id])
   instructorId String
@@ -273,12 +260,11 @@ model Schedule {
 model Attendance {
   id          String   @id @default(cuid())
   isPresent   Boolean  @default(false)
-  score       Int?     // 0-100
+  score       Int?
   feedback    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
   scheduleId  String   @unique
   schedule    Schedule @relation(fields: [scheduleId], references: [id])
   studentId   String
@@ -295,15 +281,14 @@ model Payment {
   bankName        String?
   accountName     String?
   accountNumber   String?
-  transferProof   String?       // URL to uploaded image
-  confirmedBy     String?       // User ID of CS who confirmed
+  transferProof   String?
+  confirmedBy     String?
   confirmedAt     DateTime?
   rejectionReason String?
   notes           String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  // Relations
   studentId       String
   student         User          @relation(fields: [studentId], references: [id])
   enrollmentId    String
@@ -316,7 +301,7 @@ model Payment {
 
 model BankAccount {
   id            String   @id @default(cuid())
-  bankName      String   // BCA, BRI, Mandiri, BNI, dll.
+  bankName      String
   accountNumber String
   accountName   String
   isActive      Boolean  @default(true)
@@ -328,12 +313,11 @@ model BankAccount {
 
 model InstructorRating {
   id           String    @id @default(cuid())
-  rating       Int       // 1 to 5 stars
-  review       String?   // Ulasan / komentar siswa
+  rating       Int
+  review       String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  // Relations
   studentId    String
   student      User      @relation("StudentRatings", fields: [studentId], references: [id])
   instructorId String
@@ -348,18 +332,17 @@ model InstructorRating {
 
 model VehicleReport {
   id              String               @id @default(cuid())
-  issueTitle      String               // Judul masalah (contoh: "Kopling Selip", "AC Kurang Dingin", "Rem Bunyi")
-  description     String               // Deskripsi rinci kerusakan
+  issueTitle      String
+  description     String
   severity        VehicleIssueSeverity @default(MEDIUM)
   status          VehicleIssueStatus   @default(REPORTED)
-  estimatedCost   Float?               // Estimasi biaya perbaikan
-  actualCost      Float?               // Biaya aktual
-  repairNotes     String?              // Catatan penanganan bengkel / perbaikan
+  estimatedCost   Float?
+  actualCost      Float?
+  repairNotes     String?
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
   resolvedAt      DateTime?
 
-  // Relations
   vehicleId       String
   vehicle         Vehicle              @relation(fields: [vehicleId], references: [id])
   instructorId    String
@@ -374,27 +357,26 @@ model VehicleReport {
 
 model SimApplication {
   id                  String               @id @default(cuid())
-  simType             SimType              // SIM_A or SIM_C
-  price               Float                // 700000 (SIM A) or 625000 (SIM C)
+  simType             SimType
+  price               Float
   fullName            String
   nik                 String?
   phone               String
   address             String?
-  ktpPhoto            String?              // URL foto KTP
-  medicalDoc          String?              // Surat Sehat / Psikologi
+  ktpPhoto            String?
+  medicalDoc          String?
   status              SimApplicationStatus @default(SUBMITTED)
   paymentStatus       PaymentStatus        @default(PENDING)
   bankName            String?
   accountName         String?
   accountNumber       String?
-  transferProof       String?              // URL foto bukti transfer
-  satpasDate          DateTime?            // Jadwal keberangkatan ke Satpas
+  transferProof       String?
+  satpasDate          DateTime?
   notes               String?
   rejectionReason     String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
 
-  // Relations
   studentId           String
   student             User                 @relation("StudentSimApplications", fields: [studentId], references: [id])
   branchId            String
@@ -444,3 +426,4 @@ model PushSubscription {
   @@index([userId])
   @@map("push_subscriptions")
 }
+

@@ -183,7 +183,6 @@ export default function BranchesPage() {
         )}
       />
 
-      {/* Modal Add / Edit Branch */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -245,3 +244,4 @@ export default function BranchesPage() {
     </div>
   )
 }
+

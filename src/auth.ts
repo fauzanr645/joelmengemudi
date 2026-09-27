@@ -24,7 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const normalizedEmail = (credentials.email as string).toLowerCase().trim()
 
-        // Brute-force protection: Maksimal 8 percobaan login per email per menit
         const rateLimit = checkRateLimit(`login-attempt:${normalizedEmail}`, 8, 60_000)
         if (!rateLimit.allowed) {
           throw new Error("Terlalu banyak percobaan login gagal. Harap tunggu 1 menit.")
@@ -80,3 +79,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 })
+

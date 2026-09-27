@@ -30,7 +30,7 @@ export function PushPermissionBanner() {
 
     const dismissed = localStorage.getItem("push-banner-dismissed")
     if (Notification.permission === "default" && !dismissed) {
-      // Delay slightly for smooth page load
+
       const timer = setTimeout(() => setShowBanner(true), 2000)
       return () => clearTimeout(timer)
     }
@@ -129,3 +129,4 @@ export function PushPermissionBanner() {
     </div>
   )
 }
+

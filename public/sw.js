@@ -38,12 +38,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-  // Ignore non-GET requests or chrome-extension URLs
   if (request.method !== 'GET' || !request.url.startsWith('http')) {
     return;
   }
 
-  // API calls & dynamic auth routes: Network first, no offline HTML
   if (request.url.includes('/api/')) {
     event.respondWith(
       fetch(request).catch(() => {
@@ -55,7 +53,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets (images, icons): Cache first, fallback to network
   if (
     request.destination === 'image' ||
     request.destination === 'font' ||
@@ -78,7 +75,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // HTML navigation requests: Network first with offline fallback
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
@@ -94,17 +90,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Default: Network with cache fallback
   event.respondWith(
     fetch(request).catch(() => {
       return caches.match(request);
     })
   );
 });
-
-// =========================================================
-// WEB PUSH NOTIFICATION HANDLERS (DEVICE TO WEB)
-// =========================================================
 
 self.addEventListener('push', (event) => {
   let data = {

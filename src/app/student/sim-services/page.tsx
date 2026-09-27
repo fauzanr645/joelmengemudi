@@ -65,7 +65,6 @@ export default function StudentSimServicesPage() {
   const [bankAccounts, setBankAccounts] = useState<any[]>([])
   const [userSession, setUserSession] = useState<any>(null)
 
-  // Modals
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false)
   const [isPayModalOpen, setIsPayModalOpen] = useState(false)
   const [payingApp, setPayingApp] = useState<SimApplication | null>(null)
@@ -77,7 +76,6 @@ export default function StudentSimServicesPage() {
   const [successMsg, setSuccessMsg] = useState<string>("")
   const [errorMsg, setErrorMsg] = useState<string>("")
 
-  // Form State for standalone SIM application
   const [applyForm, setApplyForm] = useState({
     simType: "SIM_A",
     fullName: "",
@@ -86,20 +84,17 @@ export default function StudentSimServicesPage() {
     address: "",
   })
 
-  // Form State for editing documents (NIK, Address, KTP photo) for bundled SIM
   const [docForm, setDocForm] = useState({
     nik: "",
     address: "",
   })
 
-  // Payment proof form
   const [payForm, setPayForm] = useState({
     bankName: "BCA",
     accountName: "",
     accountNumber: "",
   })
 
-  // Image Upload State (Auto-converted to WebP)
   const [webpProof, setWebpProof] = useState<WebPConversionResult | null>(null)
   const [webpKtp, setWebpKtp] = useState<WebPConversionResult | null>(null)
   const [isConverting, setIsConverting] = useState(false)
@@ -148,7 +143,6 @@ export default function StudentSimServicesPage() {
     }
   }, [successMsg])
 
-  // Deteksi apakah siswa terdaftar di paket kursus yang ada tambahan + SIM
   const simEnrollment = enrollments.find((e) =>
     e.course?.name?.toUpperCase().includes("SIM")
   )
@@ -164,7 +158,6 @@ export default function StudentSimServicesPage() {
 
   const isBundledSim = Boolean(simEnrollment || bundledApp)
 
-  // Inisialisasi data form edit berkas jika ada bundled app
   useEffect(() => {
     if (bundledApp) {
       setDocForm({
@@ -215,7 +208,6 @@ export default function StudentSimServicesPage() {
     }
   }
 
-  // Submit pengajuan mandiri (Hanya untuk yang TIDAK paket bundling)
   const handleApplySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -246,7 +238,6 @@ export default function StudentSimServicesPage() {
     }
   }
 
-  // Update kelengkapan berkas KTP & NIK untuk paket bundling
   const handleSaveDocSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!bundledApp) return
@@ -296,7 +287,6 @@ export default function StudentSimServicesPage() {
     }
   }
 
-  // Submit pembayaran mandiri
   const handlePaySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!payingApp) return
@@ -367,7 +357,6 @@ export default function StudentSimServicesPage() {
     }.`
   )
 
-  // Hitung tahapan stepper progress untuk paket bundling
   const currentStep =
     bundledApp?.status === "COMPLETED"
       ? 4
@@ -379,7 +368,7 @@ export default function StudentSimServicesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
           Layanan Pembuatan SIM Resmi
@@ -391,7 +380,6 @@ export default function StudentSimServicesPage() {
         </p>
       </div>
 
-      {/* Global Alerts */}
       {successMsg && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs sm:text-sm text-emerald-900 font-bold flex items-center gap-2.5 shadow-2xs animate-fade-in">
           <CheckCircle2 size={18} className="text-[#386E1B] shrink-0" />
@@ -399,13 +387,9 @@ export default function StudentSimServicesPage() {
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* JIKA SISWA MEMILIH PAKET DENGAN TAMBAHAN + SIM:                           */}
-      {/* TAMPILKAN PROSES NYA SECARA LENGKAP & TIADAKAN PILIHAN MAU BUAT SIM A / C */}
-      {/* ========================================================================= */}
       {isBundledSim ? (
         <div className="space-y-6 animate-fade-in">
-          {/* Banner Informasi Paket Bundling */}
+
           <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-lg border-2 border-[#7ADA3A]/40 relative overflow-hidden">
             <div className="absolute top-0 right-0 -mt-6 -mr-6 w-52 h-52 bg-[#7ADA3A]/15 rounded-full blur-2xl pointer-events-none" />
 
@@ -446,7 +430,6 @@ export default function StudentSimServicesPage() {
             </div>
           </div>
 
-          {/* 4-Step Interactive Progress Stepper */}
           <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 sm:p-7 shadow-xs space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
               <div>
@@ -469,9 +452,8 @@ export default function StudentSimServicesPage() {
               </div>
             </div>
 
-            {/* Stepper Visual */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-3">
-              {/* Step 1 */}
+
               <div
                 className={cn(
                   "p-4 rounded-2xl border-2 transition-all space-y-2",
@@ -496,7 +478,6 @@ export default function StudentSimServicesPage() {
                 </div>
               </div>
 
-              {/* Step 2 */}
               <div
                 className={cn(
                   "p-4 rounded-2xl border-2 transition-all space-y-2",
@@ -530,7 +511,6 @@ export default function StudentSimServicesPage() {
                 </div>
               </div>
 
-              {/* Step 3 */}
               <div
                 className={cn(
                   "p-4 rounded-2xl border-2 transition-all space-y-2",
@@ -566,7 +546,6 @@ export default function StudentSimServicesPage() {
                 </div>
               </div>
 
-              {/* Step 4 */}
               <div
                 className={cn(
                   "p-4 rounded-2xl border-2 transition-all space-y-2",
@@ -601,7 +580,6 @@ export default function StudentSimServicesPage() {
               </div>
             </div>
 
-            {/* Banner Khusus jika Satpas sudah dijadwalkan */}
             {bundledApp?.satpasDate && (
               <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div className="space-y-0.5">
@@ -627,7 +605,6 @@ export default function StudentSimServicesPage() {
               </div>
             )}
 
-            {/* Rincian Data Berkas Siswa */}
             <div className="bg-slate-50/80 rounded-2xl border border-slate-200 p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                 <span className="font-bold text-xs text-slate-800 uppercase tracking-wider">
@@ -713,7 +690,6 @@ export default function StudentSimServicesPage() {
                 </div>
               </div>
 
-              {/* Catatan Khusus dari CS */}
               {bundledApp?.notes && (
                 <div className="pt-2 border-t border-slate-200 text-xs">
                   <span className="text-[10px] font-bold text-slate-400 uppercase block">
@@ -723,7 +699,6 @@ export default function StudentSimServicesPage() {
                 </div>
               )}
 
-              {/* Action: Tombol Lengkapi Berkas */}
               <div className="pt-2 flex items-center justify-between gap-3">
                 <Button
                   size="sm"
@@ -742,14 +717,11 @@ export default function StudentSimServicesPage() {
           </div>
         </div>
       ) : (
-        /* ========================================================================= */
-        /* JIKA SISWA TIDAK MEMILIH PAKET + SIM:                                     */
-        /* TAMPILKAN PILIHAN PENDAFTARAN MANDIRI SIM A / SIM C SEPERTI BIASA        */
-        /* ========================================================================= */
+
         <div className="space-y-6">
-          {/* Two Choice Cards: SIM A (Rp 700.000) & SIM C (Rp 625.000) */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* SIM A Card */}
+
             <div className="bg-white rounded-3xl border-2 border-slate-200 hover:border-[#7ADA3A] p-6 shadow-xs transition-all space-y-4 relative overflow-hidden">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3.5">
@@ -791,7 +763,6 @@ export default function StudentSimServicesPage() {
               </Button>
             </div>
 
-            {/* SIM C Card */}
             <div className="bg-white rounded-3xl border-2 border-slate-200 hover:border-[#7ADA3A] p-6 shadow-xs transition-all space-y-4 relative overflow-hidden">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3.5">
@@ -834,7 +805,6 @@ export default function StudentSimServicesPage() {
             </div>
           </div>
 
-          {/* Riwayat Pengajuan SIM Siswa Mandiri */}
           <div className="space-y-3">
             <h2 className="text-base font-bold text-slate-900">
               Riwayat Pengajuan SIM Anda ({applications.length})
@@ -956,9 +926,6 @@ export default function StudentSimServicesPage() {
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* MODAL LENGKAPI / PERBARUI BERKAS IDENTITAS KTP & NIK (PAKET BUNDLING)     */}
-      {/* ========================================================================= */}
       <Modal
         isOpen={isDocModalOpen}
         onClose={() => setIsDocModalOpen(false)}
@@ -995,7 +962,6 @@ export default function StudentSimServicesPage() {
             required
           />
 
-          {/* Upload Foto KTP */}
           <div className="space-y-2 p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
               Foto Dokumen KTP Asli
@@ -1062,9 +1028,6 @@ export default function StudentSimServicesPage() {
         </form>
       </Modal>
 
-      {/* ========================================================================= */}
-      {/* MODAL PENGAJUAN MANDIRI (UNTUK SISWA TANPA PAKET BUNDLING)                */}
-      {/* ========================================================================= */}
       <Modal
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
@@ -1144,7 +1107,6 @@ export default function StudentSimServicesPage() {
         </form>
       </Modal>
 
-      {/* MODAL PEMBAYARAN MANDIRI */}
       <Modal
         isOpen={isPayModalOpen}
         onClose={() => setIsPayModalOpen(false)}
@@ -1172,7 +1134,6 @@ export default function StudentSimServicesPage() {
             </span>
           </div>
 
-          {/* Upload Bukti Transfer */}
           <div className="space-y-2 p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
               Upload Bukti Transfer Bank
@@ -1285,7 +1246,6 @@ export default function StudentSimServicesPage() {
         </form>
       </Modal>
 
-      {/* MODAL PRATINJAU BUKTI FOTO */}
       <Modal
         isOpen={isPreviewModalOpen}
         onClose={() => setIsPreviewModalOpen(false)}
@@ -1322,3 +1282,4 @@ export default function StudentSimServicesPage() {
     </div>
   )
 }
+

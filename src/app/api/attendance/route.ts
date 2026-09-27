@@ -17,7 +17,6 @@ export async function POST(request: Request) {
 
     const body = await request.json()
 
-    // Verifikasi kepemilikan jadwal: instruktur hanya boleh menilai jadwal miliknya sendiri
     const schedule = await prisma.schedule.findUnique({
       where: { id: body.scheduleId },
       include: {
@@ -35,8 +34,7 @@ export async function POST(request: Request) {
     }
 
     const targetStudentId = schedule.enrollment.studentId
-    
-    // Check if attendance exists
+
     const existing = await prisma.attendance.findUnique({
       where: { scheduleId: body.scheduleId },
     })
@@ -64,14 +62,12 @@ export async function POST(request: Request) {
       })
     }
 
-    // Update schedule status to COMPLETED if present
     if (body.isPresent) {
       await prisma.schedule.update({
         where: { id: body.scheduleId },
         data: { status: "COMPLETED" },
       })
 
-      // Kirim notifikasi ke siswa bahwa sesi telah selesai & dievaluasi
       try {
         await sendNotificationToUser(targetStudentId, {
           title: "Sesi Latihan Mengemudi Selesai 🎯",
@@ -91,3 +87,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

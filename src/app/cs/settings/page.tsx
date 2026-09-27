@@ -47,12 +47,10 @@ export default function CSSettingsPage() {
   const [successMsg, setSuccessMsg] = useState<string>("")
   const [errorMsg, setErrorMsg] = useState<string>("")
 
-  // Reset Password Modal
   const [resetTargetStudent, setResetTargetStudent] = useState<Student | null>(null)
   const [isResetOpen, setIsResetOpen] = useState(false)
   const [newPassword, setNewPassword] = useState<string>("password123")
 
-  // Edit Student Modal
   const [editingStudent, setEditingStudent] = useState<Student | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [editForm, setEditForm] = useState({
@@ -85,7 +83,6 @@ export default function CSSettingsPage() {
     }
   }, [successMsg])
 
-  // 1. Reset Password
   const openResetModal = (student: Student) => {
     setResetTargetStudent(student)
     setNewPassword("password123")
@@ -122,7 +119,6 @@ export default function CSSettingsPage() {
     }
   }
 
-  // 2. Edit Profile
   const openEditModal = (student: Student) => {
     setEditingStudent(student)
     setEditForm({
@@ -165,7 +161,6 @@ export default function CSSettingsPage() {
     }
   }
 
-  // 3. Toggle Status Active / Inactive
   const handleToggleStatus = async (student: Student) => {
     const actionName = student.isActive ? "menonaktifkan" : "mengaktifkan"
     if (!confirm(`Apakah Anda yakin ingin ${actionName} akun siswa ${student.name}?`)) return
@@ -246,7 +241,7 @@ export default function CSSettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Pengaturan Akun Siswa</h1>
@@ -256,7 +251,6 @@ export default function CSSettingsPage() {
         </div>
       </div>
 
-      {/* Alert Feedbacks */}
       {successMsg && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs sm:text-sm text-emerald-900 font-bold flex items-center gap-2.5 shadow-2xs animate-fade-in">
           <CheckCircle2 size={18} className="text-[#386E1B] shrink-0" />
@@ -271,7 +265,6 @@ export default function CSSettingsPage() {
         </div>
       )}
 
-      {/* Info Card */}
       <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex items-start gap-3">
         <div className="w-9 h-9 rounded-xl bg-[#7ADA3A]/20 text-[#2a5714] flex items-center justify-center shrink-0 font-bold">
           <ShieldCheck size={18} />
@@ -345,7 +338,6 @@ export default function CSSettingsPage() {
         }}
       />
 
-      {/* MODAL RESET PASSWORD SISWA */}
       <Modal
         isOpen={isResetOpen}
         onClose={() => setIsResetOpen(false)}
@@ -389,7 +381,6 @@ export default function CSSettingsPage() {
         </form>
       </Modal>
 
-      {/* MODAL EDIT DATA SISWA */}
       <Modal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -461,3 +452,4 @@ export default function CSSettingsPage() {
     </div>
   )
 }
+

@@ -1,7 +1,3 @@
-/**
- * Memastikan semua environment variable Auth/URL memiliki format protocol valid (https://)
- * Mencegah TypeError [ERR_INVALID_URL]: Invalid URL saat NextAuth memproses reqWithEnvURL di Vercel.
- */
 function sanitizeUrl(val?: string): string | undefined {
   if (!val) return undefined
   let s = String(val).trim().replace(/^["']|["']$/g, "")
@@ -44,3 +40,4 @@ if (!process.env.AUTH_SECRET && process.env.NEXTAUTH_SECRET) {
 process.env.AUTH_TRUST_HOST = "true"
 
 export {}
+

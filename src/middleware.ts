@@ -9,7 +9,6 @@ export default auth((req) => {
     const isLoggedIn = !!req.auth
     const userRole = (req.auth?.user as any)?.role
 
-    // Helper redirect 100% aman: Memodifikasi clone dari req.nextUrl (bukan new URL string relatif yang bisa crash di Vercel)
     const redirectTo = (path: string, callback?: string) => {
       const targetUrl = req.nextUrl.clone()
       targetUrl.pathname = path
@@ -20,7 +19,6 @@ export default auth((req) => {
       return NextResponse.redirect(targetUrl)
     }
 
-    // 1. Rate Limiting untuk semua panggilan API (180 req/menit per IP)
     if (pathname.startsWith("/api/")) {
       const ip = getClientIp(req)
       const rateLimit = checkRateLimit(`api-flood:${ip}`, 180, 60_000)
@@ -32,7 +30,6 @@ export default auth((req) => {
       }
     }
 
-    // 2. Public Static & Auth Paths
     if (
       pathname === "/" ||
       pathname.startsWith("/login") ||
@@ -47,7 +44,7 @@ export default auth((req) => {
       pathname.endsWith(".js") ||
       pathname.endsWith(".html")
     ) {
-      // Jika sudah login dan membuka halaman /login, redirect ke dashboard role masing-masing
+
       if (isLoggedIn && pathname === "/login") {
         if (userRole === "OWNER") return redirectTo("/owner")
         if (userRole === "CUSTOMER_SERVICE") return redirectTo("/cs")
@@ -57,7 +54,6 @@ export default auth((req) => {
       return NextResponse.next()
     }
 
-    // 3. Protected API Routes: kembalikan 401 JSON jika belum login (bukan redirect ke login HTML)
     if (!isLoggedIn) {
       if (pathname.startsWith("/api/")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -65,7 +61,6 @@ export default auth((req) => {
       return redirectTo("/login", pathname)
     }
 
-    // 4. Role-based Route Protection
     const getRoleDashboard = (role: string) => {
       switch (role) {
         case "OWNER":
@@ -81,17 +76,14 @@ export default auth((req) => {
       }
     }
 
-    // Owner dashboard: hanya untuk OWNER
     if (pathname.startsWith("/owner") && userRole !== "OWNER") {
       return redirectTo(getRoleDashboard(userRole))
     }
 
-    // CS dashboard: hanya untuk CUSTOMER_SERVICE (Owner memiliki izin supervisi)
     if (pathname.startsWith("/cs") && userRole !== "CUSTOMER_SERVICE" && userRole !== "OWNER") {
       return redirectTo(getRoleDashboard(userRole))
     }
 
-    // Instructor dashboard: hanya untuk INSTRUCTOR (Owner memiliki izin supervisi)
     if (
       pathname.startsWith("/instructor") &&
       userRole !== "INSTRUCTOR" &&
@@ -100,7 +92,6 @@ export default auth((req) => {
       return redirectTo(getRoleDashboard(userRole))
     }
 
-    // Student dashboard: hanya untuk STUDENT (Owner memiliki izin supervisi)
     if (pathname.startsWith("/student") && userRole !== "STUDENT" && userRole !== "OWNER") {
       return redirectTo(getRoleDashboard(userRole))
     }
@@ -117,3 +108,4 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|json|js)$).*)",
   ],
 }
+

@@ -93,13 +93,11 @@ export default function CSInstructorsSchedulePage() {
   const [ratings, setRatings] = useState<RatingItem[]>([])
   const [branchInfo, setBranchInfo] = useState<{ name: string; city: string } | null>(null)
 
-  // Calendar Navigation State
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
   const [selectedCalendarDate, setSelectedCalendarDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   )
 
-  // Detail Modal State
   const [selectedInstructor, setSelectedInstructor] = useState<Instructor | null>(null)
   const [instructorAgenda, setInstructorAgenda] = useState<Schedule[]>([])
   const [instructorStudents, setInstructorStudents] = useState<StudentUnderInstructor[]>([])
@@ -110,10 +108,10 @@ export default function CSInstructorsSchedulePage() {
   const fetchData = async () => {
     try {
       const [instrRes, schedRes, sessionRes, ratingsRes] = await Promise.all([
-        fetch("/api/users?role=INSTRUCTOR"), // strictly CS branch
-        fetch("/api/schedules"), // strictly CS branch
+        fetch("/api/users?role=INSTRUCTOR"), 
+        fetch("/api/schedules"), 
         fetch("/api/auth/session"),
-        fetch("/api/ratings"), // ratings for this CS branch
+        fetch("/api/ratings"), 
       ])
 
       const instData: Instructor[] = await instrRes.json()
@@ -139,7 +137,6 @@ export default function CSInstructorsSchedulePage() {
     fetchData()
   }, [])
 
-  // Helper: calculate average rating for an instructor
   const getInstructorRatingStats = (instructorId: string) => {
     const instRatings = ratings.filter((r: any) => r.instructorId === instructorId || r.instructor?.id === instructorId)
     if (instRatings.length === 0) return { avg: 0, count: 0 }
@@ -150,7 +147,6 @@ export default function CSInstructorsSchedulePage() {
     }
   }
 
-  // Helper to extract all unique students taught by an instructor
   const getStudentsForInstructor = (instructorId: string): StudentUnderInstructor[] => {
     const instSchedules = schedules.filter((s) => s.instructorId === instructorId)
     const map = new Map<string, StudentUnderInstructor>()
@@ -194,7 +190,6 @@ export default function CSInstructorsSchedulePage() {
     return Array.from(map.values())
   }
 
-  // --- CALENDAR LOGIC ---
   const year = currentMonth.getFullYear()
   const month = currentMonth.getMonth()
 
@@ -230,7 +225,6 @@ export default function CSInstructorsSchedulePage() {
   const todayStr = new Date().toISOString().split("T")[0]
   const todaySchedules = schedulesByDate[todayStr] || []
 
-  // Instructors in this branch who have NO active schedules today (Completely Free)
   const freeInstructorsToday = instructors.filter((inst) => {
     return !todaySchedules.some(
       (s) => s.instructorId === inst.id && s.status !== "CANCELLED"
@@ -366,7 +360,7 @@ export default function CSInstructorsSchedulePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Specific Branch Badge */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -384,7 +378,6 @@ export default function CSInstructorsSchedulePage() {
           </p>
         </div>
 
-        {/* View Mode Switcher */}
         <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl border border-slate-200/80 self-start sm:self-auto">
           <button
             onClick={() => setViewMode("CALENDAR")}
@@ -414,7 +407,6 @@ export default function CSInstructorsSchedulePage() {
         </div>
       </div>
 
-      {/* PEMBERITAHUAN INSTRUKTUR KOSONG HARI INI */}
       <div className="p-4 bg-white rounded-3xl border border-slate-200 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5">
@@ -479,12 +471,9 @@ export default function CSInstructorsSchedulePage() {
         )}
       </div>
 
-      {/* ============================================================== */}
-      {/* 1. VIEW MODE: KALENDER VISUAL LENGKAP */}
-      {/* ============================================================== */}
       {viewMode === "CALENDAR" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* SISI KIRI: KALENDER BULANAN */}
+
           <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -522,7 +511,6 @@ export default function CSInstructorsSchedulePage() {
               </div>
             </div>
 
-            {/* Calendar Grid */}
             <div className="space-y-2">
               <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-1">
                 {dayNames.map((d, idx) => (
@@ -636,7 +624,6 @@ export default function CSInstructorsSchedulePage() {
             </div>
           </div>
 
-          {/* SISI KANAN: DETAIL TANGGAL TERPILIH */}
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-sm space-y-4">
               <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white space-y-2">
@@ -735,9 +722,6 @@ export default function CSInstructorsSchedulePage() {
         </div>
       )}
 
-      {/* ============================================================== */}
-      {/* 2. VIEW MODE: KARTU INSTRUKTUR, SISWA DIAJAR, & RATING BINTANG */}
-      {/* ============================================================== */}
       {viewMode === "CARDS" && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -764,7 +748,6 @@ export default function CSInstructorsSchedulePage() {
                       </div>
                     </div>
 
-                    {/* Rating Badge Button */}
                     <button
                       type="button"
                       onClick={() => viewInstructorModal(instructor, "RATINGS")}
@@ -776,7 +759,6 @@ export default function CSInstructorsSchedulePage() {
                     </button>
                   </div>
 
-                  {/* Summary Siswa Bimbingan */}
                   <div className="p-3 bg-emerald-50/50 rounded-2xl border border-emerald-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                     <div className="flex items-center gap-2">
                       <Users size={14} className="text-[#3c7717] shrink-0" />
@@ -797,7 +779,6 @@ export default function CSInstructorsSchedulePage() {
                     </button>
                   </div>
 
-                  {/* Quick Action Buttons */}
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
                     <Button
                       size="xs"
@@ -853,9 +834,6 @@ export default function CSInstructorsSchedulePage() {
         </div>
       )}
 
-      {/* ============================================================== */}
-      {/* MODAL 3-TAB: SISWA DIAJAR, AGENDA, & RATING ULASAN SISWA */}
-      {/* ============================================================== */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -864,7 +842,7 @@ export default function CSInstructorsSchedulePage() {
         size="lg"
       >
         <div className="space-y-4">
-          {/* Modal Tabs */}
+
           <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
             <button
               onClick={() => setModalTab("STUDENTS")}
@@ -906,7 +884,6 @@ export default function CSInstructorsSchedulePage() {
             </button>
           </div>
 
-          {/* TAB 1: SISWA YANG DIAJAR */}
           {modalTab === "STUDENTS" && (
             <div className="space-y-3">
               {instructorStudents.length === 0 ? (
@@ -977,10 +954,9 @@ export default function CSInstructorsSchedulePage() {
             </div>
           )}
 
-          {/* TAB 2: RATING & ULASAN DARI SISWA */}
           {modalTab === "RATINGS" && (
             <div className="space-y-4">
-              {/* Summary Banner Rating */}
+
               <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-xs">
@@ -1012,7 +988,6 @@ export default function CSInstructorsSchedulePage() {
                 </div>
               </div>
 
-              {/* Reviews List */}
               {instructorReviews.length === 0 ? (
                 <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-400">
                   <Star size={32} className="mx-auto text-slate-300 mb-2" />
@@ -1037,7 +1012,6 @@ export default function CSInstructorsSchedulePage() {
                           )}
                         </div>
 
-                        {/* Stars */}
                         <div className="flex items-center text-amber-400">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
@@ -1065,7 +1039,6 @@ export default function CSInstructorsSchedulePage() {
             </div>
           )}
 
-          {/* TAB 3: AGENDA SELURUH SESI */}
           {modalTab === "AGENDA" && (
             <div className="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1">
               {instructorAgenda.map((sched, idx) => (
@@ -1118,3 +1091,4 @@ export default function CSInstructorsSchedulePage() {
     </div>
   )
 }
+

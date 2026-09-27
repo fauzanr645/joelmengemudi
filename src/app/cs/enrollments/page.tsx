@@ -67,7 +67,6 @@ export default function EnrollmentsPage() {
 
   const selectedCourse = courses.find(c => c.id === form.courseId)
 
-  // Filter instructors strictly matching the selected course package's transmission
   const matchingInstructors = instructors.filter((i: any) => {
     if (!selectedCourse) return true
     if (selectedCourse.courseType === "MANUAL") {
@@ -76,10 +75,9 @@ export default function EnrollmentsPage() {
     if (selectedCourse.courseType === "AUTOMATIC") {
       return i.specialization === "AUTOMATIC" || i.specialization === "BOTH"
     }
-    return true // BOTH / Mix
+    return true 
   })
 
-  // Selected instructor object
   const selectedInstructorObj = instructors.find((i: any) => i.id === form.instructorId)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -213,7 +211,6 @@ export default function EnrollmentsPage() {
         emptyMessage="Belum ada pendaftaran kursus."
       />
 
-      {/* Modal Pendaftaran & Auto Generate Schedules */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -305,7 +302,6 @@ export default function EnrollmentsPage() {
             />
           </div>
 
-          {/* Auto Dedicated Car Badge (1 Car per Instructor) */}
           {selectedInstructorObj && (
             <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200/80 flex items-center justify-between text-xs text-emerald-900">
               <div className="flex items-center gap-2.5">
@@ -357,3 +353,4 @@ export default function EnrollmentsPage() {
     </div>
   )
 }
+

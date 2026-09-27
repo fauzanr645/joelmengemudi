@@ -37,7 +37,6 @@ export default function InstructorSchedulesPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [successMsg, setSuccessMsg] = useState<string>("")
 
-  // Edit Lesson Type Modal State
   const [editingLessonSchedule, setEditingLessonSchedule] = useState<Schedule | null>(null)
   const [isEditLessonOpen, setIsEditLessonOpen] = useState(false)
   const [newLessonType, setNewLessonType] = useState<string>("PRACTICE")
@@ -265,7 +264,6 @@ export default function InstructorSchedulesPage() {
 
       <DataTable columns={columns} data={schedules} searchable searchPlaceholder="Cari jadwal atau nama siswa..." />
 
-      {/* Modal Edit Jenis Pelajaran (Teori, Praktik, Ujian) */}
       <Modal
         isOpen={isEditLessonOpen}
         onClose={() => setIsEditLessonOpen(false)}
@@ -310,7 +308,6 @@ export default function InstructorSchedulesPage() {
         )}
       </Modal>
 
-      {/* Modal Reschedule Request */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -366,3 +363,4 @@ export default function InstructorSchedulesPage() {
     </div>
   )
 }
+

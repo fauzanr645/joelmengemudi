@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     if (enrollmentId) where.enrollmentId = enrollmentId
 
     const userRole = (session.user as any).role
-    // Strict branch isolation: CS can ONLY see schedules from their assigned branch
+
     if (userRole === "CUSTOMER_SERVICE") {
       where.branchId = (session.user as any).branchId
     } else if (userRole === "INSTRUCTOR") {
@@ -84,7 +84,6 @@ export async function POST(request: Request) {
     const endTime = body.endTime
     const instructorId = body.instructorId
 
-    // Find the instructor's dedicated vehicle automatically
     let resolvedVehicleId = body.vehicleId || null
     if (instructorId) {
       const instructorWithCar = await prisma.user.findUnique({
@@ -96,19 +95,15 @@ export async function POST(request: Request) {
       }
     }
 
-    // Date bounds for same day query
     const startOfDay = new Date(scheduleDate)
     startOfDay.setHours(0, 0, 0, 0)
     const endOfDay = new Date(scheduleDate)
     endOfDay.setHours(23, 59, 59, 999)
 
-    // Helper to check time overlap
-    // Overlap if (newStartTime < existingEndTime) AND (newEndTime > existingStartTime)
     const isOverlapping = (start1: string, end1: string, start2: string, end2: string) => {
       return start1 < end2 && end1 > start2
     }
 
-    // 1. Check Instructor Conflict
     if (instructorId) {
       const existingInstructorSchedules = await prisma.schedule.findMany({
         where: {
@@ -136,7 +131,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. Check Vehicle Conflict
     if (resolvedVehicleId) {
       const existingVehicleSchedules = await prisma.schedule.findMany({
         where: {
@@ -185,3 +179,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

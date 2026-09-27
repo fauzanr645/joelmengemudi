@@ -6,14 +6,11 @@ import crypto from "crypto"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 import { put } from "@vercel/blob"
 
-// Maksimal ukuran file upload: 5 MB
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
-// Validasi Magic Numbers / Bytes untuk format gambar yang diizinkan
 function isValidImageBytes(buffer: Buffer): boolean {
   if (buffer.length < 12) return false
 
-  // 1. WebP: Bytes 0-3 = "RIFF", Bytes 8-11 = "WEBP"
   const isWebp =
     buffer[0] === 0x52 &&
     buffer[1] === 0x49 &&
@@ -24,10 +21,8 @@ function isValidImageBytes(buffer: Buffer): boolean {
     buffer[10] === 0x42 &&
     buffer[11] === 0x50
 
-  // 2. JPEG / JPG: FF D8 FF
   const isJpeg = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff
 
-  // 3. PNG: 89 50 4E 47 0D 0A 1A 0A
   const isPng =
     buffer[0] === 0x89 &&
     buffer[1] === 0x50 &&
@@ -48,7 +43,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Rate Limiting: Maksimal 15 upload per menit per pengguna
     const clientKey = `upload:${session.user.id || getClientIp(request)}`
     const rateLimit = checkRateLimit(clientKey, 15, 60_000)
     if (!rateLimit.allowed) {
@@ -67,7 +61,6 @@ export async function POST(request: Request) {
     let fileBuffer: Buffer | null = null
     let baseName = "bukti"
 
-    // 1. Handle JSON Payload with Base64 DataURL
     if (contentType.includes("application/json")) {
       const body = await request.json()
       const { dataUrl, filename } = body
@@ -76,7 +69,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Data gambar tidak ditemukan" }, { status: 400 })
       }
 
-      // Format: "data:image/webp;base64,....."
       const matches = dataUrl.match(/^data:image\/([A-Za-z-+]+);base64,(.+)$/)
       if (!matches || matches.length !== 3) {
         return NextResponse.json(
@@ -90,7 +82,7 @@ export async function POST(request: Request) {
         baseName = filename.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9_-]/g, "") || "bukti"
       }
     } else {
-      // 2. Handle Multipart FormData
+
       const formData = await request.formData()
       const file = (formData.get("file") || formData.get("image")) as File | null
 
@@ -110,7 +102,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "File kosong atau tidak dapat dibaca" }, { status: 400 })
     }
 
-    // Periksa Batas Ukuran File (Max 5 MB)
     if (fileBuffer.length > MAX_FILE_SIZE) {
       return NextResponse.json(
         { error: "Ukuran file melebihi batas maksimal 5 MB" },
@@ -118,7 +109,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Validasi Signature / Magic Bytes Asli File (Cegah upload file berbahaya bertopeng gambar)
     if (!isValidImageBytes(fileBuffer)) {
       return NextResponse.json(
         { error: "File yang diunggah bukan format gambar valid (hanya WebP, JPG, PNG yang diizinkan)" },
@@ -126,11 +116,9 @@ export async function POST(request: Request) {
       )
     }
 
-    // Buat nama file aman dengan UUID / random bytes acak (Mencegah Directory Traversal & Overwrite)
     const randomSuffix = crypto.randomBytes(8).toString("hex")
     const cleanFilename = `upload-${baseName.substring(0, 30)}-${Date.now()}-${randomSuffix}.webp`
 
-    // OPSI A: Jika terhubung ke Vercel Blob Storage (Production di Vercel)
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const blob = await put(`uploads/${cleanFilename}`, fileBuffer, {
         access: "public",
@@ -144,10 +132,8 @@ export async function POST(request: Request) {
       })
     }
 
-    // OPSI B: Fallback Local Development (Simpan ke folder public/uploads)
     const targetFilePath = path.join(uploadsDir, cleanFilename)
 
-    // Validasi Path Traversal: pastikan target file berada di dalam uploadsDir
     if (!targetFilePath.startsWith(uploadsDir)) {
       return NextResponse.json({ error: "Upaya direktori ilegal terdeteksi" }, { status: 400 })
     }
@@ -164,3 +150,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Gagal memproses file upload" }, { status: 500 })
   }
 }
+

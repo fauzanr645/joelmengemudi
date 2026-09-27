@@ -41,7 +41,6 @@ export default async function StudentLayout({ children }: { children: React.Reac
         </div>
       </main>
 
-      {/* Floating WA Chat to CS */}
       <StudentFloatingWA
         studentName={session.user.name || "Siswa"}
         branchName={(session.user as any).branchName}
@@ -49,3 +48,4 @@ export default async function StudentLayout({ children }: { children: React.Reac
     </div>
   )
 }
+

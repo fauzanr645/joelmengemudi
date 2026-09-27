@@ -174,7 +174,6 @@ export default function EvaluationsPage() {
         )}
       />
 
-      {/* Modal Evaluasi */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -183,7 +182,7 @@ export default function EvaluationsPage() {
         size="md"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Kehadiran Radio Buttons */}
+
           <div className="space-y-2">
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               Status Kehadiran Siswa
@@ -227,7 +226,7 @@ export default function EvaluationsPage() {
 
           {form.isPresent && (
             <>
-              {/* Score Input with Grade Indicator */}
+
               <div className="space-y-2 p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -253,7 +252,6 @@ export default function EvaluationsPage() {
                 </div>
               </div>
 
-              {/* Feedback Input */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   Catatan Evaluasi / Masukan untuk Siswa
@@ -282,3 +280,4 @@ export default function EvaluationsPage() {
     </div>
   )
 }
+

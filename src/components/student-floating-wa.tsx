@@ -15,7 +15,7 @@ export function StudentFloatingWA({ studentName = "Siswa", branchName = "joelmen
   const [isOpenTooltip, setIsOpenTooltip] = useState(false)
 
   useEffect(() => {
-    // Fetch CS phone of student's branch
+
     fetch("/api/users?role=CUSTOMER_SERVICE")
       .then((res) => res.json())
       .then((data) => {
@@ -32,7 +32,7 @@ export function StudentFloatingWA({ studentName = "Siswa", branchName = "joelmen
 
   return (
     <div className="fixed bottom-24 lg:bottom-7 right-4 lg:right-7 z-40 flex flex-col items-end">
-      {/* Tooltip Popup */}
+
       {isOpenTooltip && (
         <div className="mb-2 p-3 bg-white text-slate-800 rounded-2xl shadow-xl border border-slate-200 text-xs w-60 space-y-1.5 animate-fade-in relative">
           <button
@@ -59,7 +59,6 @@ export function StudentFloatingWA({ studentName = "Siswa", branchName = "joelmen
         </div>
       )}
 
-      {/* Floating Action Button */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setIsOpenTooltip(!isOpenTooltip)}
@@ -83,3 +82,4 @@ export function StudentFloatingWA({ studentName = "Siswa", branchName = "joelmen
     </div>
   )
 }
+

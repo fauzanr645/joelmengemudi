@@ -69,12 +69,10 @@ export default function SchedulesPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string>("")
 
-  // Student Schedule Modal State
   const [selectedStudentName, setSelectedStudentName] = useState<string>("")
   const [studentSchedules, setStudentSchedules] = useState<Schedule[]>([])
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false)
 
-  // Reschedule Approval State
   const [selectedReschedule, setSelectedReschedule] = useState<Schedule | null>(null)
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false)
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
@@ -82,7 +80,6 @@ export default function SchedulesPage() {
   const [overrideInstructorId, setOverrideInstructorId] = useState<string>("")
   const [overrideVehicleId, setOverrideVehicleId] = useState<string>("")
 
-  // CS Direct Reschedule State
   const [directRescheduleItem, setDirectRescheduleItem] = useState<Schedule | null>(null)
   const [isDirectRescheduleOpen, setIsDirectRescheduleOpen] = useState(false)
   const [directForm, setDirectForm] = useState({
@@ -92,7 +89,6 @@ export default function SchedulesPage() {
     vehicleId: "",
   })
 
-  // Edit Lesson Type Modal State
   const [editingLessonItem, setEditingLessonItem] = useState<Schedule | null>(null)
   const [isEditLessonOpen, setIsEditLessonOpen] = useState(false)
   const [newLessonType, setNewLessonType] = useState<string>("PRACTICE")
@@ -111,7 +107,7 @@ export default function SchedulesPage() {
   const fetchData = async () => {
     try {
       const [schedRes, enrollRes, instrRes, courseRes, vehRes, sessionRes] = await Promise.all([
-        fetch("/api/schedules"), // strictly scoped to CS branch by backend
+        fetch("/api/schedules"), 
         fetch("/api/enrollments"),
         fetch("/api/users?role=INSTRUCTOR"),
         fetch("/api/courses"),
@@ -128,7 +124,6 @@ export default function SchedulesPage() {
       setCourses(await courseRes.json())
       setVehicles(await vehRes.json())
 
-      // Get branch name dynamically
       if (schedData.length > 0 && schedData[0].branch) {
         setBranchInfo(schedData[0].branch)
       } else if (sessData?.user?.branchName) {
@@ -143,7 +138,6 @@ export default function SchedulesPage() {
     fetchData()
   }, [])
 
-  // Filter schedules by Date if selected
   const displaySchedules = schedules.filter((s) => {
     if (!selectedDateFilter) return true
     const sDate = new Date(s.date).toISOString().split("T")[0]
@@ -152,7 +146,6 @@ export default function SchedulesPage() {
 
   const pendingReschedules = schedules.filter((s) => s.rescheduleStatus === "PENDING")
 
-  // Group schedules by Day (Date string YYYY-MM-DD)
   const dayGroups: { [dateStr: string]: Schedule[] } = {}
   displaySchedules.forEach((s) => {
     const dateKey = new Date(s.date).toISOString().split("T")[0]
@@ -162,7 +155,6 @@ export default function SchedulesPage() {
     dayGroups[dateKey].push(s)
   })
 
-  // Sort dates chronologically
   const sortedDates = Object.keys(dayGroups).sort(
     (a, b) => new Date(a).getTime() - new Date(b).getTime()
   )
@@ -512,7 +504,7 @@ export default function SchedulesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Specific Branch Badge */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -540,7 +532,6 @@ export default function SchedulesPage() {
         </Button>
       </div>
 
-      {/* View Mode Tabs: Per Hari (BY_DAY) vs Tabel Lengkap vs Reschedule */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-2">
         <div className="flex flex-wrap gap-2">
           <button
@@ -583,7 +574,6 @@ export default function SchedulesPage() {
           </button>
         </div>
 
-        {/* Date Quick Filter */}
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
             <Calendar size={13} className="text-[#3c7717]" />
@@ -606,7 +596,6 @@ export default function SchedulesPage() {
         </div>
       </div>
 
-      {/* MODE 1: KATEGORI JADWAL PER HARI */}
       {activeTab === "BY_DAY" && (
         <div className="space-y-6">
           {sortedDates.length === 0 ? (
@@ -627,7 +616,7 @@ export default function SchedulesPage() {
                   key={dateKey}
                   className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden"
                 >
-                  {/* Day Category Header */}
+
                   <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-emerald-50/20 to-transparent border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div className={cn(
@@ -662,7 +651,6 @@ export default function SchedulesPage() {
                     </span>
                   </div>
 
-                  {/* Sesi-Sesi di Hari Tersebut (Grid Cards) */}
                   <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
                     {daySchedules.map((schedule) => {
                       const waMsg = `Halo Kak ${schedule.enrollment.student.name}, mengingatkan jadwal latihan mengemudi joelmengemudi (${branchInfo?.name || ""}) hari ${formatDate(schedule.date)} jam ${schedule.startTime} - ${schedule.endTime} bersama Instruktur ${schedule.instructor.name}. Sampai jumpa!`
@@ -673,7 +661,7 @@ export default function SchedulesPage() {
                           key={schedule.id}
                           className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-[#7ADA3A]/60 hover:bg-white transition-all space-y-3 shadow-2xs"
                         >
-                          {/* Top Row: Jam & Status */}
+
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
                               <span className="px-2.5 py-1 rounded-xl bg-slate-900 text-[#7ADA3A] font-mono font-bold text-xs">
@@ -692,7 +680,6 @@ export default function SchedulesPage() {
                             </Badge>
                           </div>
 
-                          {/* Student & Course Details */}
                           <div className="space-y-1">
                             <button
                               type="button"
@@ -706,7 +693,6 @@ export default function SchedulesPage() {
                             </p>
                           </div>
 
-                          {/* Instructor & Vehicle */}
                           <div className="pt-2 border-t border-slate-200/60 text-xs text-slate-600 space-y-1">
                             <div className="flex items-center justify-between">
                               <span className="text-slate-400">Instruktur:</span>
@@ -720,7 +706,6 @@ export default function SchedulesPage() {
                             </div>
                           </div>
 
-                          {/* Actions: WA, Reschedule, Edit Lesson */}
                           <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-2">
                             <button
                               onClick={() => openEditLessonModal(schedule)}
@@ -767,7 +752,6 @@ export default function SchedulesPage() {
         </div>
       )}
 
-      {/* MODE 2: TABEL SEMUA JADWAL */}
       {activeTab === "ALL_TABLE" && (
         <DataTable
           columns={columns}
@@ -778,7 +762,6 @@ export default function SchedulesPage() {
         />
       )}
 
-      {/* MODE 3: PERMINTAAN RESCHEDULE PENDING */}
       {activeTab === "RESCHEDULE_PENDING" && (
         <DataTable
           columns={columns}
@@ -789,7 +772,6 @@ export default function SchedulesPage() {
         />
       )}
 
-      {/* Modal Edit Jenis Pelajaran */}
       <Modal
         isOpen={isEditLessonOpen}
         onClose={() => setIsEditLessonOpen(false)}
@@ -829,7 +811,6 @@ export default function SchedulesPage() {
         )}
       </Modal>
 
-      {/* Modal View All Schedules for Selected Student */}
       <Modal
         isOpen={isStudentModalOpen}
         onClose={() => setIsStudentModalOpen(false)}
@@ -882,7 +863,6 @@ export default function SchedulesPage() {
         </div>
       </Modal>
 
-      {/* Modal CS Direct Reschedule */}
       <Modal
         isOpen={isDirectRescheduleOpen}
         onClose={() => setIsDirectRescheduleOpen(false)}
@@ -958,7 +938,6 @@ export default function SchedulesPage() {
         </form>
       </Modal>
 
-      {/* Modal Approve Reschedule Pending */}
       <Modal
         isOpen={isApproveModalOpen}
         onClose={() => setIsApproveModalOpen(false)}
@@ -1012,7 +991,6 @@ export default function SchedulesPage() {
         )}
       </Modal>
 
-      {/* Modal Reject Reschedule */}
       <Modal
         isOpen={isRejectModalOpen}
         onClose={() => setIsRejectModalOpen(false)}
@@ -1043,7 +1021,6 @@ export default function SchedulesPage() {
         </div>
       </Modal>
 
-      {/* Modal Add Schedule Manual */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Buat Jadwal Baru" size="lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           {errorMsg && (
@@ -1126,3 +1103,4 @@ export default function SchedulesPage() {
     </div>
   )
 }
+

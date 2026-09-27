@@ -82,7 +82,6 @@ export async function POST(request: Request) {
         ? (session.user as any).branchId
         : body.branchId || (session.user as any).branchId
 
-    // Fetch Course details to know session count and duration
     const course = await prisma.course.findUnique({
       where: { id: body.courseId },
     })
@@ -91,7 +90,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Kursus tidak ditemukan" }, { status: 404 })
     }
 
-    // Create Enrollment
     const enrollment = await prisma.enrollment.create({
       data: {
         studentId: body.studentId,
@@ -107,8 +105,6 @@ export async function POST(request: Request) {
       },
     })
 
-    // Automatic Schedule Generation Logic
-    // Find all active instructors in the branch matching course transmission, along with their dedicated vehicle
     const branchInstructors = await prisma.user.findMany({
       where: {
         role: "INSTRUCTOR",
@@ -125,7 +121,6 @@ export async function POST(request: Request) {
       },
     })
 
-    // Timing calculations
     const hoursPerSession = Math.max(1, Math.round(course.duration / course.sessions))
     const startHourNum = parseInt((body.startTime || "08:00").split(":")[0], 10)
     const endHourNum = startHourNum + hoursPerSession
@@ -148,7 +143,6 @@ export async function POST(request: Request) {
       const endOfDay = new Date(sessionDate)
       endOfDay.setHours(23, 59, 59, 999)
 
-      // Get all existing schedules on this day
       const existingDaySchedules = await prisma.schedule.findMany({
         where: {
           branchId: targetBranchId,
@@ -157,7 +151,6 @@ export async function POST(request: Request) {
         },
       })
 
-      // Pick non-conflicting instructor
       let selectedInstructor = null
       if (body.instructorId) {
         const preferred = branchInstructors.find(inst => inst.id === body.instructorId)
@@ -175,7 +168,6 @@ export async function POST(request: Request) {
         ) || branchInstructors[0]
       }
 
-      // The vehicle is strictly the selected instructor's dedicated vehicle!
       const dedicatedVehicleId = selectedInstructor?.assignedVehicle?.id || null
 
       let lessonType: "THEORY" | "PRACTICE" | "EXAM" = "PRACTICE"
@@ -208,7 +200,6 @@ export async function POST(request: Request) {
       })
     }
 
-    // Automatically create SimApplication if the course package includes SIM
     if (course.name.toUpperCase().includes("SIM")) {
       const existingSim = await prisma.simApplication.findFirst({
         where: { studentId: body.studentId, simType: "SIM_A" },
@@ -234,9 +225,8 @@ export async function POST(request: Request) {
       }
     }
 
-    // Kirim notifikasi penting ke Perangkat Siswa, Instruktur, dan Owner
     try {
-      // 1. Notif ke Siswa
+
       await sendNotificationToUser(body.studentId, {
         title: "Pendaftaran Kursus Dikonfirmasi! 🚗",
         message: `Selamat! Anda resmi terdaftar pada ${course.name}. ${course.sessions} sesi jadwal latihan Anda telah disusun.`,
@@ -244,7 +234,6 @@ export async function POST(request: Request) {
         link: "/student/schedules",
       })
 
-      // 2. Notif ke Instruktur yang ditugaskan
       const assignedInstructors = Array.from(new Set(schedulesToCreate.map((s) => s.instructorId)))
       for (const instId of assignedInstructors) {
         await sendNotificationToUser(instId, {
@@ -255,7 +244,6 @@ export async function POST(request: Request) {
         })
       }
 
-      // 3. Notif ke Owner
       await sendNotificationToRole("OWNER", null, {
         title: "Pendaftaran Siswa Baru Masuk",
         message: `${enrollment.student.name} mendaftar paket ${course.name}.`,
@@ -272,3 +260,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

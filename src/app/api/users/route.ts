@@ -18,7 +18,6 @@ export async function GET(request: Request) {
     if (role) where.role = role
     if (branchId) where.branchId = branchId
 
-    // CS can only see users in their branch
     const userRole = (session.user as any).role
     if (userRole === "CUSTOMER_SERVICE") {
       where.branchId = (session.user as any).branchId
@@ -85,7 +84,6 @@ export async function POST(request: Request) {
 
     const body = await request.json()
 
-    // Check if email exists
     const existing = await prisma.user.findUnique({ where: { email: body.email } })
     if (existing) {
       return NextResponse.json({ error: "Email sudah terdaftar" }, { status: 400 })
@@ -116,3 +114,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

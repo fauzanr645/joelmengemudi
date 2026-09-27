@@ -22,7 +22,6 @@ export default function InstructorStudentsPage() {
     fetch("/api/schedules").then((r) => r.json()).then(setSchedules)
   }, [])
 
-  // Group by student
   const studentMap = new Map<string, StudentData>()
   schedules.forEach((s: any) => {
     const key = s.enrollment?.student?.name || "Siswa"
@@ -140,3 +139,4 @@ export default function InstructorStudentsPage() {
     </div>
   )
 }
+

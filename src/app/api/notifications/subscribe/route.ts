@@ -19,7 +19,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Upsert subscription: update keys jika endpoint sudah ada, atau buat baru
     const subscription = await prisma.pushSubscription.upsert({
       where: { endpoint },
       create: {
@@ -79,3 +78,4 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
+

@@ -1,7 +1,3 @@
-/**
- * Helper untuk mengonversi berbagai format gambar (JPG, PNG, JPEG, dll)
- * secara otomatis menjadi format WebP (.webp) dengan kompresi visual tinggi.
- */
 export interface WebPConversionResult {
   file: File
   blob: Blob
@@ -31,7 +27,6 @@ export async function convertImageToWebP(
         let width = img.width
         let height = img.height
 
-        // Downscale jika resolusi foto sangat besar (misal kamera 48MP)
         if (width > maxWidth || height > maxHeight) {
           if (width / maxWidth > height / maxHeight) {
             height = Math.round((height * maxWidth) / width)
@@ -51,10 +46,8 @@ export async function convertImageToWebP(
           return reject(new Error("Gagal menginisialisasi canvas untuk konversi."))
         }
 
-        // Draw image onto canvas
         ctx.drawImage(img, 0, 0, width, height)
 
-        // Convert to WebP format
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -107,3 +100,4 @@ export function formatFileSize(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i]
 }
+

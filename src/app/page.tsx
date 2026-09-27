@@ -1,11 +1,11 @@
 import Link from "next/link"
+import Image from "next/image"
 import prisma from "@/lib/prisma"
 import { Star, ArrowRight } from "lucide-react"
 import { formatDate, getWhatsAppLink, cn } from "@/lib/utils"
 import { LandingInteractive } from "@/components/landing-interactive"
 
 export default async function HomePage() {
-  // Ambil data cabang dan rating nyata dari database
   const [branches, ratings] = await Promise.all([
     prisma.branch.findMany({
       select: {
@@ -36,17 +36,16 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 selection:bg-[#7ADA3A]/40 selection:text-slate-950 font-sans">
-      {/* ========================================================= */}
-      {/* 1. NAVBAR */}
-      {/* ========================================================= */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Logo with signature #7ADA3A branding */}
           <Link href="/" className="flex items-center gap-2.5">
-            <img
+            <Image
               src="/joel-logo.png"
               alt="Logo joelmengemudi"
-              className="w-8 h-8 object-contain"
+              width={36}
+              height={36}
+              priority
+              className="w-8 h-8 sm:w-9 sm:h-9 object-contain"
             />
             <div>
               <span className="font-black text-slate-900 text-base tracking-tight block leading-tight">
@@ -58,7 +57,6 @@ export default async function HomePage() {
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-600">
             <a href="#layanan" className="hover:text-slate-900 transition-colors">
               Layanan
@@ -83,7 +81,6 @@ export default async function HomePage() {
             </a>
           </nav>
 
-          {/* Tombol Masuk Portal with #7ADA3A */}
           <div className="flex items-center gap-3">
             <Link
               href="/login"
@@ -96,13 +93,9 @@ export default async function HomePage() {
         </div>
       </header>
 
-      {/* ========================================================= */}
-      {/* 2. HERO SECTION */}
-      {/* ========================================================= */}
       <section className="pt-8 pb-12 sm:pt-14 sm:pb-16 bg-gradient-to-b from-[#f4fcee] via-white to-white border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Teks Kiri */}
             <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#7ADA3A]/25 border border-[#7ADA3A]/50 text-slate-950 text-xs font-bold">
                 <span className="w-2 h-2 rounded-full bg-[#386E1B]" />
@@ -120,7 +113,6 @@ export default async function HomePage() {
                 Latihan mengemudi mobil manual dan matic bersama instruktur berpengalaman. Jadwal fleksibel di 5 cabang resmi Bali serta pendampingan uji SIM A resmi di Satpas Polresta.
               </p>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
                 <a
                   href="#paket-kursus"
@@ -139,7 +131,6 @@ export default async function HomePage() {
                 </a>
               </div>
 
-              {/* 4 Poin Kunci (Icon-free, clean tag design) */}
               <div className="grid grid-cols-2 gap-2 pt-4 text-left border-t border-slate-200">
                 <div className="p-2.5 rounded-xl bg-white border-2 border-slate-200">
                   <span className="block text-[11px] font-bold text-slate-900">5 Cabang Resmi</span>
@@ -160,16 +151,18 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Visual Kanan: Mobil Latihan Indonesia Asli */}
             <div className="lg:col-span-5">
               <div className="bg-white p-3 rounded-2xl border-2 border-[#7ADA3A] shadow-sm">
                 <div className="aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 relative">
-                  <img
+                  <Image
                     src="/images/mobil_brio.webp"
                     alt="Mobil Latihan Kursus Mengemudi Honda Brio di Indonesia"
-                    className="w-full h-full object-cover"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 450px"
+                    className="object-cover"
                   />
-                  <div className="absolute top-2 left-2 bg-[#7ADA3A] text-slate-950 text-[10px] font-black uppercase tracking-wider py-1 px-2.5 rounded-md shadow-xs">
+                  <div className="absolute top-2 left-2 z-10 bg-[#7ADA3A] text-slate-950 text-[10px] font-black uppercase tracking-wider py-1 px-2.5 rounded-md shadow-xs">
                     Unit Latihan Resmi
                   </div>
                 </div>
@@ -194,9 +187,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 3. TIGA PILIHAN LAYANAN UTAMA (ICON-FREE & CLEAN) */}
-      {/* ========================================================= */}
       <section id="layanan" className="py-12 sm:py-16 bg-white border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-8 sm:mb-10">
@@ -212,7 +202,6 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* 1. Kursus Manual */}
             <div className="p-5 rounded-2xl border-2 border-slate-200 hover:border-[#7ADA3A] bg-white transition-all space-y-3 shadow-xs">
               <div className="w-8 h-8 rounded-lg bg-[#7ADA3A] text-slate-950 flex items-center justify-center font-black text-xs">
                 01
@@ -230,7 +219,6 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* 2. Kursus Matic */}
             <div className="p-5 rounded-2xl border-2 border-slate-200 hover:border-[#7ADA3A] bg-white transition-all space-y-3 shadow-xs">
               <div className="w-8 h-8 rounded-lg bg-[#7ADA3A] text-slate-950 flex items-center justify-center font-black text-xs">
                 02
@@ -248,7 +236,6 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* 3. Layanan SIM */}
             <div className="p-5 rounded-2xl border-2 border-slate-200 hover:border-[#7ADA3A] bg-white transition-all space-y-3 shadow-xs">
               <div className="w-8 h-8 rounded-lg bg-[#7ADA3A] text-slate-950 flex items-center justify-center font-black text-xs">
                 03
@@ -269,9 +256,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 4. ARMADA MOBIL INDONESIA & FASILITAS */}
-      {/* ========================================================= */}
       <section id="armada" className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -307,21 +291,31 @@ export default async function HomePage() {
             <div className="lg:col-span-6 grid grid-cols-2 gap-3">
               <div className="space-y-3">
                 <div className="rounded-2xl overflow-hidden border-2 border-slate-200 bg-white">
-                  <img
-                    src="/images/mobil_agya.webp"
-                    alt="Toyota Agya Mobil Latihan Indonesia"
-                    className="w-full h-36 sm:h-44 object-cover"
-                  />
+                  <div className="relative w-full h-36 sm:h-44">
+                    <Image
+                      src="/images/mobil_agya.webp"
+                      alt="Toyota Agya Mobil Latihan Indonesia"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 250px"
+                      className="object-cover"
+                      loading="lazy"
+                    />
+                  </div>
                   <p className="p-2 text-center text-[11px] font-bold text-slate-800">
                     Toyota Agya (Transmisi Matic)
                   </p>
                 </div>
                 <div className="rounded-2xl overflow-hidden border-2 border-slate-200 bg-white">
-                  <img
-                    src="/images/interior_mobil.webp"
-                    alt="Interior Mobil Setir Kanan Indonesia"
-                    className="w-full h-36 sm:h-44 object-cover"
-                  />
+                  <div className="relative w-full h-36 sm:h-44">
+                    <Image
+                      src="/images/interior_mobil.webp"
+                      alt="Interior Mobil Setir Kanan Indonesia"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 250px"
+                      className="object-cover"
+                      loading="lazy"
+                    />
+                  </div>
                   <p className="p-2 text-center text-[11px] font-bold text-slate-800">
                     Kemudi Setir Kanan & Rem Ganda
                   </p>
@@ -330,21 +324,31 @@ export default async function HomePage() {
 
               <div className="space-y-3 pt-4">
                 <div className="rounded-2xl overflow-hidden border-2 border-slate-200 bg-white">
-                  <img
-                    src="/images/mobil_ayla.webp"
-                    alt="Daihatsu Ayla Mobil Latihan Indonesia"
-                    className="w-full h-36 sm:h-44 object-cover"
-                  />
+                  <div className="relative w-full h-36 sm:h-44">
+                    <Image
+                      src="/images/mobil_ayla.webp"
+                      alt="Daihatsu Ayla Mobil Latihan Indonesia"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 250px"
+                      className="object-cover"
+                      loading="lazy"
+                    />
+                  </div>
                   <p className="p-2 text-center text-[11px] font-bold text-slate-800">
                     Daihatsu Ayla (Transmisi Manual)
                   </p>
                 </div>
                 <div className="rounded-2xl overflow-hidden border-2 border-slate-200 bg-white">
-                  <img
-                    src="/images/jalan_bali.webp"
-                    alt="Suasana Jalan Raya di Bali"
-                    className="w-full h-36 sm:h-44 object-cover"
-                  />
+                  <div className="relative w-full h-36 sm:h-44">
+                    <Image
+                      src="/images/jalan_bali.webp"
+                      alt="Suasana Jalan Raya di Bali"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 250px"
+                      className="object-cover"
+                      loading="lazy"
+                    />
+                  </div>
                   <p className="p-2 text-center text-[11px] font-bold text-slate-800">
                     Latihan Langsung di Jalan Bali
                   </p>
@@ -355,14 +359,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 5. INTERACTIVE SECTION (RECOMMENDER, PACKAGES, BRANCHES, FAQ) */}
-      {/* ========================================================= */}
       <LandingInteractive branches={branches} />
 
-      {/* ========================================================= */}
-      {/* 6. MODUL KHUSUS LAYANAN SIM SATPAS */}
-      {/* ========================================================= */}
       <section id="layanan-sim" className="py-12 sm:py-16 bg-white border-t border-slate-200 scroll-mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-8 sm:mb-10">
@@ -378,7 +376,6 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl">
-            {/* Card SIM A */}
             <div className="p-5 sm:p-6 rounded-2xl border-2 border-slate-200 hover:border-[#7ADA3A] bg-slate-50/60 flex flex-col justify-between space-y-4 transition-all">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -419,7 +416,6 @@ export default async function HomePage() {
               </a>
             </div>
 
-            {/* Card SIM C */}
             <div className="p-5 sm:p-6 rounded-2xl border-2 border-slate-200 hover:border-[#7ADA3A] bg-slate-50/60 flex flex-col justify-between space-y-4 transition-all">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -463,9 +459,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 7. ULASAN & TESTIMONI DARI DATABASE */}
-      {/* ========================================================= */}
       <section id="testimoni" className="py-12 sm:py-16 bg-slate-50 border-t border-slate-200 scroll-mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-8 sm:mb-10">
@@ -526,18 +519,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 8. FOOTER BERSIH & RAPI DENGAN BRAND #7ADA3A */}
-      {/* ========================================================= */}
       <footer className="bg-slate-950 text-white text-xs border-t border-slate-800 pb-20 lg:pb-8 pt-10 sm:pt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
-            {/* Kolom 1: Profil */}
             <div className="md:col-span-5 space-y-3">
               <div className="flex items-center gap-2">
-                <img
+                <Image
                   src="/joel-logo.png"
                   alt="Logo joelmengemudi"
+                  width={28}
+                  height={28}
                   className="w-7 h-7 object-contain brightness-0 invert"
                 />
                 <span className="font-bold text-white text-base tracking-tight">
@@ -553,7 +544,6 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Kolom 2: Cabang */}
             <div className="md:col-span-3 space-y-2">
               <p className="font-bold text-white tracking-wider text-xs uppercase">
                 Kantor & Cabang
@@ -567,7 +557,6 @@ export default async function HomePage() {
               </ul>
             </div>
 
-            {/* Kolom 3: Pilihan Paket */}
             <div className="md:col-span-4 space-y-2">
               <p className="font-bold text-white tracking-wider text-xs uppercase">
                 Paket & Layanan
@@ -589,9 +578,6 @@ export default async function HomePage() {
         </div>
       </footer>
 
-      {/* ========================================================= */}
-      {/* 9. FLOATING BOTTOM BAR PADA LAYAR MOBILE */}
-      {/* ========================================================= */}
       <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 p-2.5 flex items-center gap-2 shadow-md">
         <a
           href={defaultWaUrl}
@@ -612,3 +598,4 @@ export default async function HomePage() {
     </div>
   )
 }
+

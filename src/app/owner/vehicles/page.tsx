@@ -80,7 +80,6 @@ export default function VehiclesPage() {
   const getBranchCount = (branchId: string) =>
     allVehicles.filter((v) => v.branchId === branchId).length
 
-  // Filter instructors for current modal branch
   const modalInstructors = instructors.filter(
     (i) => !form.branchId || i.branchId === form.branchId
   )
@@ -210,7 +209,6 @@ export default function VehiclesPage() {
         </Button>
       </div>
 
-      {/* Branch Filter Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-2xl border border-slate-200/60">
         <button
           onClick={() => setSelectedBranch("ALL")}
@@ -260,7 +258,6 @@ export default function VehiclesPage() {
         emptyMessage={selectedBranch === "ALL" ? "Belum ada kendaraan terdaftar." : "Belum ada kendaraan di cabang ini."}
       />
 
-      {/* Modal Add Vehicle */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -347,3 +344,4 @@ export default function VehiclesPage() {
     </div>
   )
 }
+
