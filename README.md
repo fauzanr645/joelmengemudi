@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# joelmengemudi
 
-## Getting Started
+Sistem Informasi Manajemen & Pendaftaran Kursus Mengemudi Multi-Cabang Bali.
 
-First, run the development server:
+## Fitur Utama
+
+- **Landing Page Interaktif**: Filter transmisi, kalkulator rekomendasi kursus, rincian biaya DP 50%, informasi 5 cabang Bali, dan FAQ.
+- **Multi-Role Portal**:
+  - **Owner**: Manajemen cabang, armada mobil, instruktur, tarif kursus, modul persetujuan servis armada, dan rekapitulasi keuangan.
+  - **Customer Service**: Pendaftaran siswa baru, verifikasi pembayaran, penjadwalan latihan, verifikasi permohonan SIM, dan monitoring jadwal instruktur.
+  - **Instruktur**: Kalender sesi mengemudi harian, pengisian presensi dan nilai kompetensi siswa, serta pelaporan kendala armada mobil.
+  - **Siswa**: Tracking sesi mengemudi, riwayat pembayaran bertahap (DP/Lunas), pengajuan reschedule, proses bimbingan SIM Satpas, dan rating instruktur.
+- **PWA & Web Push Notification**: Notifikasi penting ke perangkat pengguna (pendaftaran, verifikasi pembayaran, jadwal Satpas, dan laporan armada).
+
+## Teknologi
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Database**: PostgreSQL (Prisma ORM)
+- **Autentikasi**: NextAuth.js v5 (JWT & Role-Based Access Control)
+- **Penyimpanan Berkas**: Hybrid Local & Vercel Blob Storage
+- **Push Notification**: Web Push Protocol (VAPID)
+- **Styling**: Tailwind CSS
+
+## Memulai Proyek
 
 ```bash
+# Install dependensi
+npm install
+
+# Setup database
+npx prisma db push
+npx tsx prisma/seed.ts
+
+# Jalankan server development
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Buka [http://localhost:3001](http://localhost:3001) di browser Anda.
