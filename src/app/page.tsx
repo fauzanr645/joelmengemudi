@@ -509,10 +509,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-slate-950 text-white text-xs border-t border-slate-800 pb-20 lg:pb-8 pt-10 sm:pt-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
-            <div className="md:col-span-5 space-y-3">
+      <footer className="bg-slate-950 text-white text-xs border-t border-slate-800 pb-20 lg:pb-8 pt-10 sm:pt-14">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Image
                   src="/joel-logo.png"
@@ -525,45 +525,124 @@ export default async function HomePage() {
                   joel<span className="text-[#7ADA3A]">mengemudi</span>
                 </span>
               </div>
-              <p className="text-slate-400 leading-relaxed text-xs max-w-sm">
-                Lembaga kursus mengemudi mobil resmi di Bali. Melayani pelatihan transmisi manual, matic, serta bimbingan uji SIM A & C di Satpas Polresta.
+              <p className="text-slate-400 leading-relaxed text-xs">
+                Lembaga kursus mengemudi mobil resmi di Bali. Melayani latihan manual, matic, dan bimbingan uji SIM A & C resmi di Satpas.
               </p>
               <div className="pt-1 text-slate-400 space-y-1 text-xs">
-                <p>Telepon / WA: <strong className="text-white">{defaultCsPhone}</strong></p>
-                <p>Jam Operasional: Setiap hari 08.00 - 17.00 WITA</p>
+                <p>WA: <strong className="text-white">{defaultCsPhone}</strong></p>
+                <p>Jam: 08.00 - 17.00 WITA</p>
               </div>
             </div>
 
-            <div className="md:col-span-3 space-y-2">
-              <p className="font-bold text-white tracking-wider text-xs uppercase">
-                Kantor & Cabang
+            <div className="space-y-3">
+              <p className="font-bold text-white tracking-wider text-xs uppercase text-[#7ADA3A]">
+                Navigasi Cepat
               </p>
-              <ul className="space-y-1 text-slate-400 text-xs">
-                <li>• Head Office (Jl. Kanyeri, Denpasar)</li>
-                <li>• Office Sesetan (Denpasar Selatan)</li>
-                <li>• Office Bangli (Jl. M. Hatta)</li>
-                <li>• Drop Point Mengwi (Badung)</li>
-                <li>• Office Gianyar (Sukawati)</li>
+              <ul className="space-y-2 text-slate-400 text-xs">
+                <li>
+                  <a href="#layanan" className="hover:text-white transition-colors">Layanan Utama</a>
+                </li>
+                <li>
+                  <a href="#paket-kursus" className="hover:text-white transition-colors">Paket & Biaya</a>
+                </li>
+                <li>
+                  <a href="#layanan-sim" className="hover:text-white transition-colors">Layanan SIM</a>
+                </li>
+                <li>
+                  <a href="#armada" className="hover:text-white transition-colors">Armada Mobil</a>
+                </li>
+                <li>
+                  <a href="#cabang-bali" className="hover:text-white transition-colors">5 Cabang Resmi</a>
+                </li>
+                <li>
+                  <a href="#testimoni" className="hover:text-white transition-colors">Ulasan Siswa</a>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-white transition-colors">Tanya Jawab (FAQ)</a>
+                </li>
               </ul>
             </div>
 
-            <div className="md:col-span-4 space-y-2">
-              <p className="font-bold text-white tracking-wider text-xs uppercase">
-                Paket & Layanan
+            <div className="space-y-3">
+              <p className="font-bold text-white tracking-wider text-xs uppercase text-[#7ADA3A]">
+                Kantor & Cabang
               </p>
-              <ul className="space-y-1 text-slate-400 text-xs">
-                <li>• Paket Manual: 4 Jam (525rb), 8 Jam (950rb), 10 Jam (1.150rb)</li>
-                <li>• Paket Matic: 4 Jam (525rb), 8 Jam (950rb), 10 Jam (1.150rb)</li>
-                <li>• Paket Mix (Manual 8 Jam + Matic 4 Jam): 1.475rb</li>
-                <li>• Paket Kursus + SIM A (Manual, Matic, Mix)</li>
-                <li>• Layanan SIM Satpas: SIM A (700rb) & SIM C (625rb)</li>
+              <ul className="space-y-2 text-slate-400 text-xs">
+                <li>
+                  <a href="#cabang-bali" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Head Office</strong>
+                    <span>Jl. Kanyeri No. 53, Denpasar</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#cabang-bali" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Office Sesetan</strong>
+                    <span>Jl. Raya Sesetan 200 A, Denpasar</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#cabang-bali" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Office Bangli</strong>
+                    <span>Jl. Muhammad Hatta, Bangli</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#cabang-bali" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Drop Point Mengwi</strong>
+                    <span>Jl. Gulingan, Badung</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#cabang-bali" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Office Gianyar</strong>
+                    <span>Jl. Celuk, Sukawati, Gianyar</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <p className="font-bold text-white tracking-wider text-xs uppercase text-[#7ADA3A]">
+                Paket Kursus & SIM
+              </p>
+              <ul className="space-y-2 text-slate-400 text-xs">
+                <li>
+                  <a href="#paket-kursus" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Mobil Manual</strong>
+                    <span>4 Jam (525rb) • 8 Jam (950rb) • 10 Jam (1,15jt)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#paket-kursus" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Mobil Matic</strong>
+                    <span>4 Jam (525rb) • 8 Jam (950rb) • 10 Jam (1,15jt)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#paket-kursus" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Paket Mix</strong>
+                    <span>Manual 8 Jam + Matic 4 Jam (1,475jt)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#paket-kursus" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Paket + SIM A</strong>
+                    <span>Manual (1,83jt) • Matic (1,83jt) • Mix (2,155jt)</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#layanan-sim" className="hover:text-white transition-colors block">
+                    <strong className="text-slate-200 block">Layanan Khusus SIM</strong>
+                    <span>SIM A (700rb) • SIM C (625rb)</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
 
           <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
             <p>© {new Date().getFullYear()} joelmengemudi. Hak Cipta Dilindungi.</p>
-            <p>Sistem Informasi Kursus Mengemudi Bali</p>
+            <p>Sistem Informasi Kursus Mengemudi Multi-Cabang Bali</p>
           </div>
         </div>
       </footer>
