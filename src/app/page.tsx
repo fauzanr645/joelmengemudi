@@ -80,16 +80,6 @@ export default async function HomePage() {
               FAQ
             </a>
           </nav>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="py-2 px-4 rounded-xl bg-[#7ADA3A] hover:bg-[#68c82f] text-slate-950 font-bold text-xs transition-all shadow-2xs flex items-center gap-1.5"
-            >
-              <span>Masuk Portal</span>
-              <ArrowRight size={13} />
-            </Link>
-          </div>
         </div>
       </header>
 
